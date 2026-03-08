@@ -1,0 +1,344 @@
+// Prisma schema for TAU Community system
+// This schema matches the existing PostgreSQL database structure
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Custom enum types matching the database
+enum UserRole {
+  SUPER_ADMIN
+  CLUB_PRESIDENT
+  STUDENT
+
+  @@map("user_role")
+}
+
+enum ActivityStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+
+  @@map("activity_status")
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("application_status")
+}
+
+// Content moderation enums
+enum ContentType {
+  ACTIVITY
+  CLUB_INFO
+  APPLICATION
+  USER_PROFILE
+
+  @@map("content_type")
+}
+
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
+  UNDER_REVIEW
+
+  @@map("moderation_status")
+}
+
+enum ModerationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+
+  @@map("moderation_priority")
+}
+
+enum ModerationAction {
+  APPROVE
+  REJECT
+  EDIT
+  DELETE
+  HIDE
+  WARN_USER
+  SUSPEND_USER
+
+  @@map("moderation_action")
+}
+
+enum FlagCategory {
+  INAPPROPRIATE_CONTENT
+  SPAM
+  HARASSMENT
+  MISINFORMATION
+  COPYRIGHT_VIOLATION
+  PRIVACY_VIOLATION
+  OTHER
+
+  @@map("flag_category")
+}
+
+enum SeverityLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+
+  @@map("severity_level")
+}
+
+enum AlertStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+  FALSE_POSITIVE
+
+  @@map("alert_status")
+}
+
+// Users table - stores all system users with role-based access
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  role         UserRole
+  firstName    String   @map("first_name") @db.VarChar(100)
+  lastName     String   @map("last_name") @db.VarChar(100)
+  phone        String?  @db.VarChar(20)
+  isActive     Boolean  @default(true) @map("is_active")
+  emailVerified Boolean @default(false) @map("email_verified")
+  verificationCode String? @map("verification_code") @db.VarChar(6)
+  verificationCodeExpires DateTime? @map("verification_code_expires")
+  totpSecret   String?  @map("totp_secret") @db.VarChar(32)
+  totpEnabled  Boolean  @default(false) @map("totp_enabled")
+  resetToken   String?  @map("reset_token") @db.VarChar(255)
+  resetTokenExpires DateTime? @map("reset_token_expires")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  presidedClub     Club[]        @relation("ClubPresident")
+  createdActivities Activity[]   @relation("ActivityCreator")
+  applications     Application[] @relation("ApplicationStudent")
+  reviewedApplications Application[] @relation("ApplicationReviewer")
+  auditLogs        AuditLog[]
+  
+  // Content moderation relations
+  flaggedContent   ContentFlags[] @relation("ContentFlagger")
+  resolvedFlags    ContentFlags[] @relation("FlagResolver")
+  authoredContent  ContentModerationQueue[] @relation("ModerationAuthor")
+  flaggedModerationContent  ContentModerationQueue[] @relation("ModerationFlagger")
+  reviewedContent  ContentModerationQueue[] @relation("ModerationReviewer")
+  moderationHistory ContentModerationHistory[] @relation("ModerationPerformer")
+  suspiciousAlerts SuspiciousActivityAlerts[] @relation("SuspiciousUser")
+  reviewedAlerts   SuspiciousActivityAlerts[] @relation("AlertReviewer")
+
+  @@map("users")
+}
+
+// Clubs table - stores club information with URL slug generation
+model Club {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @unique @db.VarChar(200)
+  description String?  @db.Text
+  urlSlug     String   @unique @map("url_slug") @db.VarChar(200)
+  presidentId String?  @map("president_id") @db.Uuid
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  president    User?         @relation("ClubPresident", fields: [presidentId], references: [id], onDelete: SetNull)
+  activities   Activity[]
+  applications Application[]
+  moderationQueue ContentModerationQueue[]
+
+  @@map("clubs")
+}
+
+// Activities table - stores club activities and events
+model Activity {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clubId         String         @map("club_id") @db.Uuid
+  title          String         @db.VarChar(300)
+  description    String?        @db.Text
+  startDate      DateTime       @map("start_date")
+  endDate        DateTime       @map("end_date")
+  location       String?        @db.VarChar(200)
+  maxParticipants Int?          @map("max_participants")
+  createdBy      String         @map("created_by") @db.Uuid
+  status         ActivityStatus @default(DRAFT)
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  club    Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  creator User @relation("ActivityCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+
+  @@map("activities")
+}
+
+// Applications table - stores student applications to join clubs
+model Application {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clubId         String            @map("club_id") @db.Uuid
+  studentId      String?           @map("student_id") @db.Uuid
+  studentName    String            @map("student_name") @db.VarChar(200)
+  studentEmail   String            @map("student_email") @db.VarChar(255)
+  motivation     String            @db.Text
+  status         ApplicationStatus @default(PENDING)
+  submittedAt    DateTime          @default(now()) @map("submitted_at")
+  reviewedAt     DateTime?         @map("reviewed_at")
+  reviewedBy     String?           @map("reviewed_by") @db.Uuid
+  reviewComments String?           @map("review_comments") @db.Text
+
+  // Relations
+  club     Club  @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  student  User? @relation("ApplicationStudent", fields: [studentId], references: [id], onDelete: SetNull)
+  reviewer User? @relation("ApplicationReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@unique([clubId, studentEmail], name: "applications_unique_student_club")
+  @@map("applications")
+}
+
+// Audit log table - comprehensive logging of all system activities
+model AuditLog {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String?   @map("user_id") @db.Uuid
+  userRole     UserRole  @map("user_role")
+  action       String    @db.VarChar(100)
+  resource     String    @db.VarChar(100)
+  resourceId   String?   @map("resource_id") @db.Uuid
+  changes      Json?     @db.JsonB
+  ipAddress    String?   @map("ip_address") @db.Inet
+  userAgent    String?   @map("user_agent") @db.Text
+  timestamp    DateTime  @default(now())
+  success      Boolean   @default(true)
+  errorMessage String?   @map("error_message") @db.Text
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_log")
+}
+
+// Content moderation queue table - tracks all content that needs review
+model ContentModerationQueue {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contentType   ContentType        @map("content_type")
+  contentId     String             @map("content_id") @db.Uuid
+  contentData   Json               @map("content_data") @db.JsonB
+  authorId      String?            @map("author_id") @db.Uuid
+  clubId        String?            @map("club_id") @db.Uuid
+  status        ModerationStatus   @default(PENDING)
+  priority      ModerationPriority @default(MEDIUM)
+  flaggedAt     DateTime           @default(now()) @map("flagged_at")
+  flaggedBy     String?            @map("flagged_by") @db.Uuid
+  flagReason    String?            @map("flag_reason") @db.Text
+  reviewedAt    DateTime?          @map("reviewed_at")
+  reviewedBy    String?            @map("reviewed_by") @db.Uuid
+  reviewAction  ModerationAction?  @map("review_action")
+  reviewComments String?           @map("review_comments") @db.Text
+  autoFlagged   Boolean            @default(false) @map("auto_flagged")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  author        User? @relation("ModerationAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  club          Club? @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  flaggedByUser User? @relation("ModerationFlagger", fields: [flaggedBy], references: [id], onDelete: SetNull)
+  reviewedByUser User? @relation("ModerationReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@map("content_moderation_queue")
+}
+
+// Content flags table - tracks individual flags on content
+model ContentFlags {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contentType         ContentType       @map("content_type")
+  contentId           String            @map("content_id") @db.Uuid
+  flaggedBy           String?           @map("flagged_by") @db.Uuid
+  flagCategory        FlagCategory      @map("flag_category")
+  flagReason          String            @map("flag_reason") @db.Text
+  additionalInfo      String?           @map("additional_info") @db.Text
+  createdAt           DateTime          @default(now()) @map("created_at")
+  resolvedAt          DateTime?         @map("resolved_at")
+  resolvedBy          String?           @map("resolved_by") @db.Uuid
+  resolutionAction    ModerationAction? @map("resolution_action")
+  resolutionComments  String?           @map("resolution_comments") @db.Text
+
+  // Relations
+  flaggedByUser User? @relation("ContentFlagger", fields: [flaggedBy], references: [id], onDelete: SetNull)
+  resolvedByUser User? @relation("FlagResolver", fields: [resolvedBy], references: [id], onDelete: SetNull)
+
+  @@unique([contentType, contentId, flaggedBy], name: "content_flags_unique_user_content")
+  @@map("content_flags")
+}
+
+// Content moderation history table - tracks all moderation actions
+model ContentModerationHistory {
+  id           String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contentType  ContentType      @map("content_type")
+  contentId    String           @map("content_id") @db.Uuid
+  action       ModerationAction
+  performedBy  String?          @map("performed_by") @db.Uuid
+  performedAt  DateTime         @default(now()) @map("performed_at")
+  reason       String?          @db.Text
+  previousData Json?            @map("previous_data") @db.JsonB
+  newData      Json?            @map("new_data") @db.JsonB
+  automated    Boolean          @default(false)
+
+  // Relations
+  performedByUser User? @relation("ModerationPerformer", fields: [performedBy], references: [id], onDelete: SetNull)
+
+  @@map("content_moderation_history")
+}
+
+// Suspicious activity patterns table - tracks patterns for automated detection
+model SuspiciousActivityPatterns {
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patternName        String        @map("pattern_name") @db.VarChar(100)
+  patternDescription String?       @map("pattern_description") @db.Text
+  detectionRules     Json          @map("detection_rules") @db.JsonB
+  severityLevel      SeverityLevel @default(MEDIUM) @map("severity_level")
+  isActive           Boolean       @default(true) @map("is_active")
+  createdAt          DateTime      @default(now()) @map("created_at")
+  updatedAt          DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  alerts SuspiciousActivityAlerts[]
+
+  @@map("suspicious_activity_patterns")
+}
+
+// Suspicious activity alerts table - tracks detected suspicious activities
+model SuspiciousActivityAlerts {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patternId       String        @map("pattern_id") @db.Uuid
+  userId          String?       @map("user_id") @db.Uuid
+  activityData    Json          @map("activity_data") @db.JsonB
+  severityLevel   SeverityLevel @map("severity_level")
+  detectedAt      DateTime      @default(now()) @map("detected_at")
+  reviewedAt      DateTime?     @map("reviewed_at")
+  reviewedBy      String?       @map("reviewed_by") @db.Uuid
+  status          AlertStatus   @default(OPEN)
+  resolutionNotes String?       @map("resolution_notes") @db.Text
+
+  // Relations
+  pattern        SuspiciousActivityPatterns @relation(fields: [patternId], references: [id], onDelete: Cascade)
+  user           User?                      @relation("SuspiciousUser", fields: [userId], references: [id], onDelete: SetNull)
+  reviewedByUser User?                      @relation("AlertReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@map("suspicious_activity_alerts")
+}

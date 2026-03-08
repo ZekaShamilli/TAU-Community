@@ -1,0 +1,49 @@
+# Files and directories to ignore during backup
+# Environment files - contain sensitive data
+.env
+.env.*
+*.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# Node modules - can be reinstalled
+node_modules/
+
+# Build outputs - can be regenerated
+dist/
+build/
+*.tsbuildinfo
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+
+# Git
+.git/
+
+# Vercel
+.vercel/
