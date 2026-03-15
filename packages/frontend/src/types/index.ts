@@ -54,6 +54,7 @@ export interface Club {
   name: string;
   description: string;
   urlSlug: string;
+  logoUrl?: string | null;
   presidentId?: string;
   president?: {
     id: string;

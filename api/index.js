@@ -695,7 +695,7 @@ module.exports = async function handler(req, res) {
           
           const query = `
             SELECT 
-              c.id, c.name, c.description, c.is_active, c.created_at, c.president_id,
+              c.id, c.name, c.description, c.is_active, c.created_at, c.president_id, c.logo_url,
               u.first_name as president_first_name, u.last_name as president_last_name, u.email as president_email,
               COUNT(DISTINCT a.id) as activities_count,
               COUNT(DISTINCT app.id) as applications_count
@@ -704,7 +704,7 @@ module.exports = async function handler(req, res) {
             LEFT JOIN activities a ON c.id = a.club_id
             LEFT JOIN applications app ON c.id = app.club_id
             WHERE c.id = $1
-            GROUP BY c.id, c.name, c.description, c.is_active, c.created_at, c.president_id,
+            GROUP BY c.id, c.name, c.description, c.is_active, c.created_at, c.president_id, c.logo_url,
                      u.first_name, u.last_name, u.email
           `;
           
@@ -728,6 +728,8 @@ module.exports = async function handler(req, res) {
             description: row.description,
             url_slug: row.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
             urlSlug: row.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+            logo_url: row.logo_url || null,
+            logoUrl: row.logo_url || null,
             is_active: row.is_active,
             isActive: row.is_active,
             created_at: row.created_at,
@@ -766,7 +768,7 @@ module.exports = async function handler(req, res) {
           const query = `
             SELECT 
               c.id, c.name, c.description, c.is_active, c.created_at,
-              c.president_id
+              c.president_id, c.logo_url
             FROM clubs c
             WHERE c.is_active = true
           `;
@@ -817,6 +819,7 @@ module.exports = async function handler(req, res) {
             name: club.name,
             description: club.description,
             urlSlug: club.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+            logoUrl: club.logo_url || null,
             isActive: club.is_active,
             createdAt: club.created_at,
             activitiesCount: 0,
@@ -865,7 +868,7 @@ module.exports = async function handler(req, res) {
         
         const query = `
           SELECT 
-            c.id, c.name, c.description, c.is_active, c.created_at, c.president_id,
+            c.id, c.name, c.description, c.is_active, c.created_at, c.president_id, c.logo_url,
             u.first_name as president_first_name, u.last_name as president_last_name, u.email as president_email,
             COUNT(DISTINCT a.id) as activities_count,
             COUNT(DISTINCT app.id) as applications_count
@@ -874,7 +877,7 @@ module.exports = async function handler(req, res) {
           LEFT JOIN activities a ON c.id = a.club_id
           LEFT JOIN applications app ON c.id = app.club_id
           ${whereClause}
-          GROUP BY c.id, c.name, c.description, c.is_active, c.created_at, c.president_id,
+          GROUP BY c.id, c.name, c.description, c.is_active, c.created_at, c.president_id, c.logo_url,
                    u.first_name, u.last_name, u.email
           ORDER BY c.created_at DESC
         `;
@@ -888,6 +891,8 @@ module.exports = async function handler(req, res) {
           description: row.description,
           url_slug: row.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
           urlSlug: row.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+          logo_url: row.logo_url || null,
+          logoUrl: row.logo_url || null,
           is_active: row.is_active,
           isActive: row.is_active,
           created_at: row.created_at,
@@ -1317,6 +1322,73 @@ module.exports = async function handler(req, res) {
           error: 'Failed to restore club',
           message: error.message 
         });
+        return;
+      }
+    }
+
+    // Upload club logo endpoint - PUT /api/clubs/:id/logo
+    const clubLogoMatch = url.match(/^\/api\/clubs\/([a-f0-9-]+)\/logo$/);
+    if (clubLogoMatch && method === 'PUT') {
+      try {
+        const clubId = clubLogoMatch[1];
+        const { logoUrl } = req.body;
+
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          res.status(401).json({ error: { code: 'UNAUTHORIZED', message: 'No token provided' } });
+          return;
+        }
+        const token = authHeader.substring(7);
+        let decoded;
+        try {
+          decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8'));
+        } catch (e) {
+          res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token format' } });
+          return;
+        }
+
+        const client = getDatabaseClient();
+        await client.connect();
+
+        const clubCheck = await client.query('SELECT id, president_id FROM clubs WHERE id = $1', [clubId]);
+        if (clubCheck.rows.length === 0) {
+          await client.end();
+          res.status(404).json({ error: { code: 'CLUB_NOT_FOUND', message: 'Club not found' } });
+          return;
+        }
+
+        const club = clubCheck.rows[0];
+        const isSuperAdmin = decoded.role === 'SUPER_ADMIN';
+        const isPresident = decoded.role === 'CLUB_PRESIDENT' && club.president_id === decoded.userId;
+
+        if (!isSuperAdmin && !isPresident) {
+          await client.end();
+          res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Only club president or super admin can update the logo' } });
+          return;
+        }
+
+        if (logoUrl !== null && logoUrl !== undefined) {
+          if (typeof logoUrl !== 'string') {
+            await client.end();
+            res.status(400).json({ error: { code: 'INVALID_LOGO', message: 'logoUrl must be a string (base64 data URL) or null' } });
+            return;
+          }
+          const MAX_SIZE = 500 * 1024;
+          if (logoUrl.length > MAX_SIZE) {
+            await client.end();
+            res.status(400).json({ error: { code: 'LOGO_TOO_LARGE', message: 'Logo image is too large. Please use an image under 375KB.' } });
+            return;
+          }
+        }
+
+        await client.query('UPDATE clubs SET logo_url = $1, updated_at = NOW() WHERE id = $2', [logoUrl || null, clubId]);
+        await client.end();
+
+        res.status(200).json({ success: true, message: 'Club logo updated successfully', data: { logoUrl: logoUrl || null } });
+        return;
+      } catch (error) {
+        console.error('Club logo upload error:', error);
+        res.status(500).json({ error: 'Failed to update club logo', message: error.message });
         return;
       }
     }

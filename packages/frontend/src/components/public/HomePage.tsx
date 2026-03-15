@@ -466,10 +466,22 @@ const HomePage: React.FC = () => {
                     onClick={() => handleClubClick(club)}
                     className="glow-card group cursor-pointer p-5"
                   >
-                    {/* Club icon placeholder */}
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-2xl text-lg font-bold text-white"
-                      style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}>
-                      {club.name?.[0]?.toUpperCase()}
+                    {/* Club logo / letter avatar */}
+                    <div className="mb-4 h-10 w-10 rounded-2xl overflow-hidden flex-shrink-0">
+                      {club.logoUrl ? (
+                        <img
+                          src={club.logoUrl}
+                          alt={`${club.name} logo`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full flex items-center justify-center text-lg font-bold text-white"
+                          style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}
+                        >
+                          {club.name?.[0]?.toUpperCase()}
+                        </div>
+                      )}
                     </div>
 
                     <h3 className="font-display text-xl font-semibold text-text-primary leading-snug">{club.name}</h3>

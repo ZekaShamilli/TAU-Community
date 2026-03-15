@@ -50,6 +50,15 @@ This runs `vite` in `packages/frontend` on port 5000 with `allowedHosts: true`.
 - `packages/frontend/` — React frontend (Vite)
 - `packages/frontend/dist/` — Built frontend (generated, not committed)
 
+## Club Logo Feature
+
+Club logos are stored as base64 JPEG strings in the `clubs.logo_url` TEXT column.
+
+- **API endpoint**: `PUT /api/clubs/:id/logo` — accepts `{ logoUrl: string | null }`, restricted to club presidents and super admins
+- **Max size**: 500KB base64 string (~375KB image), compressed client-side to 400×400px JPEG (quality 0.8)
+- **Frontend**: `ClubSettings.tsx` — drag-and-drop upload with preview, save/discard flow
+- **Display**: logos shown in `HomePage.tsx` club cards and `ClubPage.tsx` hero section; fallback to letter avatar when no logo
+
 ## Migration Notes (Vercel → Replit)
 
 - `server.js` port changed from 3000 → 5000
