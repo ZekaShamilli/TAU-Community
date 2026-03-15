@@ -6,7 +6,7 @@ const { Client } = require('pg');
 // Fixed: Body parsing for Vercel serverless functions (v3)
 const getDatabaseClient = () => {
   return new Client({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.SUPABASE_DATABASE_URL,
     ssl: {
       rejectUnauthorized: false
     }
