@@ -5,23 +5,23 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f0f4ff;
-  --bg-elevated: rgba(255, 255, 255, 0.78);
-  --bg-panel: rgba(255, 255, 255, 0.68);
-  --text-primary: #0a1628;
-  --text-secondary: #2d4060;
-  --text-tertiary: #5a7090;
-  --border: rgba(15, 23, 42, 0.10);
-  --accent: #2563eb;
-  --accent-2: #0ea5e9;
-  --accent-3: #6366f1;
-  --shadow-soft: 0 20px 50px rgba(37, 99, 235, 0.09);
-  --shadow-float: 0 16px 38px rgba(37, 99, 235, 0.13);
-  --shape-a: rgba(37, 99, 235, 0.18);
-  --shape-b: rgba(14, 165, 233, 0.16);
-  --shape-c: rgba(99, 102, 241, 0.12);
-  --glow-primary: rgba(37, 99, 235, 0.25);
-  --glow-secondary: rgba(14, 165, 233, 0.20);
+  --bg: #fff8f8;
+  --bg-elevated: rgba(255, 255, 255, 0.90);
+  --bg-panel: rgba(255, 255, 255, 0.80);
+  --text-primary: #1a0505;
+  --text-secondary: #4a1a1a;
+  --text-tertiary: #8a5050;
+  --border: rgba(180, 30, 30, 0.12);
+  --accent: #dc2626;
+  --accent-2: #ef4444;
+  --accent-3: #f97316;
+  --shadow-soft: 0 20px 50px rgba(220, 38, 38, 0.09);
+  --shadow-float: 0 16px 38px rgba(220, 38, 38, 0.13);
+  --shape-a: rgba(220, 38, 38, 0.18);
+  --shape-b: rgba(239, 68, 68, 0.14);
+  --shape-c: rgba(249, 115, 22, 0.10);
+  --glow-primary: rgba(220, 38, 38, 0.22);
+  --glow-secondary: rgba(239, 68, 68, 0.16);
 }
 
 :root[data-theme='dark'] {
