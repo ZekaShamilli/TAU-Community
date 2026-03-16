@@ -312,34 +312,23 @@ module.exports = async function handler(req, res) {
         await dbClient.connect();
 
         let user;
-        // Check by google_id
-        let result = await dbClient.query(
-          'SELECT id, email, role, first_name, last_name, is_active FROM users WHERE google_id = $1 AND is_active = true',
-          [googleId]
+        // Check by email only (google_id column may not exist)
+        result = await dbClient.query(
+          'SELECT id, email, role, first_name, last_name, is_active FROM users WHERE email = $1 AND is_active = true',
+          [email]
         );
 
         if (result.rows.length > 0) {
           user = result.rows[0];
         } else {
-          // Check by email
-          result = await dbClient.query(
-            'SELECT id, email, role, first_name, last_name, is_active FROM users WHERE email = $1 AND is_active = true',
-            [email]
+          // Create new user
+          const insertResult = await dbClient.query(
+            `INSERT INTO users (email, first_name, last_name, role, password_hash, is_active, email_verified)
+             VALUES ($1, $2, $3, 'STUDENT', 'google-oauth', true, true)
+             RETURNING id, email, first_name, last_name, role, is_active`,
+            [email, firstName, lastName]
           );
-
-          if (result.rows.length > 0) {
-            user = result.rows[0];
-            await dbClient.query('UPDATE users SET google_id = $1 WHERE id = $2', [googleId, user.id]);
-          } else {
-            // Create new user
-            const insertResult = await dbClient.query(
-              `INSERT INTO users (email, first_name, last_name, google_id, role, password_hash, is_active, email_verified)
-               VALUES ($1, $2, $3, $4, 'STUDENT', 'google-oauth', true, true)
-               RETURNING id, email, first_name, last_name, role, is_active`,
-              [email, firstName, lastName, googleId]
-            );
-            user = insertResult.rows[0];
-          }
+          user = insertResult.rows[0];
         }
 
         // Get club info if president
