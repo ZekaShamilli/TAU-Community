@@ -270,6 +270,126 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Google OAuth endpoint
+    if (url === '/api/auth/google' && method === 'POST') {
+      try {
+        const { credential } = req.body;
+
+        if (!credential) {
+          res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'Google credential is required' } });
+          return;
+        }
+
+        const { OAuth2Client } = require('google-auth-library');
+        const clientId = process.env.GOOGLE_CLIENT_ID;
+
+        if (!clientId) {
+          res.status(500).json({ error: { code: 'GOOGLE_OAUTH_NOT_CONFIGURED', message: 'Google OAuth is not configured' } });
+          return;
+        }
+
+        const client = new OAuth2Client(clientId);
+        let ticket;
+        try {
+          ticket = await client.verifyIdToken({ idToken: credential, audience: clientId });
+        } catch (e) {
+          res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid Google token' } });
+          return;
+        }
+
+        const payload = ticket.getPayload();
+        const googleId = payload.sub;
+        const email = payload.email;
+        const firstName = payload.given_name || '';
+        const lastName = payload.family_name || '';
+
+        if (!email) {
+          res.status(400).json({ error: { code: 'MISSING_EMAIL', message: 'Email not provided by Google' } });
+          return;
+        }
+
+        const dbClient = getDatabaseClient();
+        await dbClient.connect();
+
+        let user;
+        // Check by google_id
+        let result = await dbClient.query(
+          'SELECT id, email, role, first_name, last_name, is_active FROM users WHERE google_id = $1 AND is_active = true',
+          [googleId]
+        );
+
+        if (result.rows.length > 0) {
+          user = result.rows[0];
+        } else {
+          // Check by email
+          result = await dbClient.query(
+            'SELECT id, email, role, first_name, last_name, is_active FROM users WHERE email = $1 AND is_active = true',
+            [email]
+          );
+
+          if (result.rows.length > 0) {
+            user = result.rows[0];
+            await dbClient.query('UPDATE users SET google_id = $1 WHERE id = $2', [googleId, user.id]);
+          } else {
+            // Create new user
+            const insertResult = await dbClient.query(
+              `INSERT INTO users (email, first_name, last_name, google_id, role, password_hash, is_active, email_verified)
+               VALUES ($1, $2, $3, $4, 'STUDENT', 'google-oauth', true, true)
+               RETURNING id, email, first_name, last_name, role, is_active`,
+              [email, firstName, lastName, googleId]
+            );
+            user = insertResult.rows[0];
+          }
+        }
+
+        // Get club info if president
+        let clubId = null, clubName = null;
+        if (user.role === 'CLUB_PRESIDENT') {
+          const clubResult = await dbClient.query(
+            'SELECT id, name FROM clubs WHERE president_id = $1 AND is_active = true LIMIT 1',
+            [user.id]
+          );
+          if (clubResult.rows.length > 0) {
+            clubId = clubResult.rows[0].id;
+            clubName = clubResult.rows[0].name;
+          }
+        }
+
+        await dbClient.end();
+
+        // Generate token
+        const token = Buffer.from(JSON.stringify({
+          userId: user.id,
+          email: user.email,
+          role: user.role,
+          exp: Date.now() + (24 * 60 * 60 * 1000)
+        })).toString('base64');
+
+        res.status(200).json({
+          success: true,
+          data: {
+            user: {
+              id: user.id,
+              email: user.email,
+              firstName: user.first_name,
+              lastName: user.last_name,
+              role: user.role,
+              isActive: user.is_active,
+              clubId,
+              clubName
+            },
+            tokens: { accessToken: token, refreshToken: token }
+          }
+        });
+        return;
+
+      } catch (error) {
+        console.error('Google OAuth error:', error);
+        res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Google authentication failed', details: error.message } });
+        return;
+      }
+    }
+
     // Logout endpoint
     if (url === '/api/auth/logout' && method === 'POST') {
       try {
