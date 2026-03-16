@@ -46,6 +46,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
         auto_select: false,
         cancel_on_tap_outside: true,
         ux_mode: 'popup',
+        use_fedcm_for_prompt: true,
       });
       // Render a tiny hidden button so Google registers the client
       if (hiddenRef.current) {
@@ -80,13 +81,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
       onError?.('Google services not loaded. Please refresh the page.');
       return;
     }
-    window.google.accounts.id.prompt((notification: any) => {
-      if (notification.isNotDisplayed()) {
-        // One Tap blocked, click the hidden rendered Google button instead
-        const btn = hiddenRef.current?.querySelector('div[role="button"], iframe') as HTMLElement;
-        if (btn) btn.click();
-      }
-    });
+    window.google.accounts.id.prompt();
   };
 
   return (
