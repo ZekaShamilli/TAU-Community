@@ -193,14 +193,21 @@ app.post('/api/auth/google', async (req, res) => {
       clubName: clubResult.rows.length > 0 ? clubResult.rows[0].name : undefined,
     };
 
+    const { JWTService } = require('./lib/auth/jwt');
+    const tokens = await JWTService.generateTokenPair(
+      user.id,
+      user.role,
+      userData.clubId
+    );
+
     res.json({
       success: true,
       data: {
         user: userData,
         tokens: {
-          accessToken: 'mock-access-token-google',
-          refreshToken: 'mock-refresh-token-google',
-          expiresIn: 900,
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+          expiresIn: tokens.expiresIn,
         },
       },
     });
@@ -2147,47 +2154,46 @@ const requireAuthentication = async (req: express.Request, res: express.Response
 
     const token = authHeader.split(' ')[1];
     
-    // For now, we'll use a simple approach since we're using mock tokens
-    // In a real app, you'd verify the JWT token here
+    // Verify JWT token using JWTService
+    const { JWTService } = require('./lib/auth/jwt');
+    const validation = await JWTService.validateAccessToken(token);
     
-    // Check if it's a Google OAuth token (mock tokens we generate)
-    if (token === 'mock-access-token-google' || token === 'mock-access-token') {
-      // Get user from session/database based on some identifier
-      // For now, we'll extract user info from the request or use a different approach
-      
-      // Try to get user email from request body or headers
-      const userEmail = req.headers['x-user-email'] as string;
-      
-      if (userEmail) {
-        // Get user from database
-        const userResult = await db.query(`
-          SELECT id, email, first_name, last_name, role 
-          FROM users 
-          WHERE email = $1 AND is_active = true
-        `, [userEmail]);
-        
-        if (userResult.rows.length > 0) {
-          const user = userResult.rows[0];
-          req.authUser = {
-            id: user.id,
-            email: user.email,
-            firstName: user.first_name,
-            lastName: user.last_name,
-            role: user.role
-          };
-          return next();
-        }
-      }
+    if (!validation.valid || !validation.payload) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'INVALID_TOKEN',
+          message: validation.error || 'Invalid or expired token',
+        },
+      });
     }
-    
-    // Fallback: return error for invalid token
-    return res.status(401).json({
-      success: false,
-      error: {
-        code: 'INVALID_TOKEN',
-        message: 'Invalid or expired token',
-      },
-    });
+
+    // Get user from database
+    const userResult = await db.query(`
+      SELECT id, email, first_name, last_name, role 
+      FROM users 
+      WHERE id = $1 AND is_active = true
+    `, [validation.payload.userId]);
+
+    if (userResult.rows.length === 0) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'USER_NOT_FOUND',
+          message: 'User not found or inactive',
+        },
+      });
+    }
+
+    const user = userResult.rows[0];
+    req.authUser = {
+      id: user.id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      role: user.role
+    };
+    return next();
     
   } catch (error) {
     console.error('Authentication middleware error:', error);
