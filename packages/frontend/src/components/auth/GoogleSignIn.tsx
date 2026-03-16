@@ -86,19 +86,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
     }
 
     if (window.google) {
-      window.google.accounts.id.prompt((notification: any) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          // Fallback: show the One Tap dialog
-          window.google.accounts.id.renderButton(
-            document.getElementById('google-signin-button'),
-            {
-              theme: 'outline',
-              size: 'large',
-              width: '100%',
-            }
-          );
-        }
-      });
+      window.google.accounts.id.prompt();
     } else {
       onError?.('Google services not loaded. Please refresh the page and try again.');
     }
