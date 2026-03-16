@@ -2,6 +2,17 @@
   "version": 2,
   "buildCommand": "npm run build:frontend",
   "outputDirectory": "packages/frontend/dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/applications/check",
