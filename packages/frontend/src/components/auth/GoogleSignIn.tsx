@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { authService } from '../../services/authService';
 import { useAuth } from '../../contexts/AuthContext';
@@ -17,7 +17,8 @@ declare global {
 
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disabled }) => {
   const { login } = useAuth();
-  const hiddenButtonRef = useRef<HTMLDivElement>(null);
+  const [googleLoaded, setGoogleLoaded] = useState(false);
+  const hiddenRef = useRef<HTMLDivElement>(null);
 
   const handleCredentialResponse = async (response: any) => {
     try {
@@ -29,7 +30,6 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
         onError?.('Google sign-in failed');
       }
     } catch (error: any) {
-      console.error('Google sign-in error:', error);
       onError?.(error.message || 'Google sign-in failed');
     }
   };
@@ -39,22 +39,28 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
     if (!clientId || clientId === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') return;
 
     const initGoogle = () => {
-      if (!window.google || !hiddenButtonRef.current) return;
+      if (!window.google) return;
       window.google.accounts.id.initialize({
         client_id: clientId,
         callback: handleCredentialResponse,
         auto_select: false,
         cancel_on_tap_outside: true,
+        ux_mode: 'popup',
       });
-      // Render hidden button to enable click functionality
-      window.google.accounts.id.renderButton(hiddenButtonRef.current, {
-        theme: 'outline',
-        size: 'large',
-        width: 1,
-      });
+      // Render a tiny hidden button so Google registers the client
+      if (hiddenRef.current) {
+        window.google.accounts.id.renderButton(hiddenRef.current, {
+          size: 'small',
+          width: 1,
+        });
+      }
+      setGoogleLoaded(true);
     };
 
-    if (window.google) { initGoogle(); return; }
+    if (window.google) {
+      initGoogle();
+      return;
+    }
 
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
@@ -64,17 +70,30 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
     script.onerror = () => onError?.('Failed to load Google services');
     document.head.appendChild(script);
 
-    return () => { if (document.head.contains(script)) document.head.removeChild(script); };
+    return () => {
+      if (document.head.contains(script)) document.head.removeChild(script);
+    };
   }, []);
 
   const handleClick = () => {
-    // Click the hidden Google button to trigger OAuth popup
-    const googleBtn = hiddenButtonRef.current?.querySelector('div[role="button"]') as HTMLElement;
-    if (googleBtn) {
-      googleBtn.click();
-    } else {
-      window.google?.accounts?.id?.prompt();
+    if (!googleLoaded || !window.google) {
+      onError?.('Google services not loaded. Please refresh the page.');
+      return;
     }
+    window.google.accounts.id.prompt((notification: any) => {
+      if (notification.isNotDisplayed()) {
+        // One Tap blocked by browser, use OAuth2 popup instead
+        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        const redirectUri = window.location.origin;
+        const scope = 'openid email profile';
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
+        
+        const popup = window.open(url, 'google-signin', 'width=500,height=600,scrollbars=yes');
+        if (!popup) {
+          onError?.('Popup blocked. Please allow popups for this site.');
+        }
+      }
+    });
   };
 
   return (
@@ -88,10 +107,9 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
         </div>
       </div>
 
-      {/* Hidden Google button for OAuth functionality */}
-      <div ref={hiddenButtonRef} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: '1px', height: '1px', overflow: 'hidden' }} />
+      {/* Hidden Google button */}
+      <div ref={hiddenRef} style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', width: '1px', height: '1px', overflow: 'hidden' }} />
 
-      {/* Custom visible button */}
       <motion.button
         type="button"
         onClick={handleClick}
