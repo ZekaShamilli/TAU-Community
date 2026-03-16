@@ -82,16 +82,9 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ onSuccess, onError, disable
     }
     window.google.accounts.id.prompt((notification: any) => {
       if (notification.isNotDisplayed()) {
-        // One Tap blocked by browser, use OAuth2 popup instead
-        const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-        const redirectUri = window.location.origin;
-        const scope = 'openid email profile';
-        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=${encodeURIComponent(scope)}&prompt=select_account`;
-        
-        const popup = window.open(url, 'google-signin', 'width=500,height=600,scrollbars=yes');
-        if (!popup) {
-          onError?.('Popup blocked. Please allow popups for this site.');
-        }
+        // One Tap blocked, click the hidden rendered Google button instead
+        const btn = hiddenRef.current?.querySelector('div[role="button"], iframe') as HTMLElement;
+        if (btn) btn.click();
       }
     });
   };
