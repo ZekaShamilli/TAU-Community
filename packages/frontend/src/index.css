@@ -1,53 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #fff8f8;
-  --bg-elevated: rgba(255, 255, 255, 0.90);
-  --bg-panel: rgba(255, 255, 255, 0.80);
-  --text-primary: #1a0505;
-  --text-secondary: #4a1a1a;
-  --text-tertiary: #8a5050;
-  --border: rgba(180, 30, 30, 0.12);
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-panel: #fafaf9;
+  --bg-subtle: #f5f5f4;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-tertiary: #a8a29e;
+  --border: rgba(0, 0, 0, 0.09);
+  --border-strong: rgba(0, 0, 0, 0.16);
   --accent: #dc2626;
+  --accent-hover: #b91c1c;
   --accent-2: #ef4444;
-  --accent-3: #f97316;
-  --shadow-soft: 0 20px 50px rgba(220, 38, 38, 0.09);
-  --shadow-float: 0 16px 38px rgba(220, 38, 38, 0.13);
-  --shape-a: rgba(220, 38, 38, 0.18);
-  --shape-b: rgba(239, 68, 68, 0.14);
-  --shape-c: rgba(249, 115, 22, 0.10);
-  --glow-primary: rgba(220, 38, 38, 0.22);
-  --glow-secondary: rgba(239, 68, 68, 0.16);
+  --accent-3: #fca5a5;
+  --accent-muted: rgba(220, 38, 38, 0.08);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 4px 24px rgba(0, 0, 0, 0.09), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lifted: 0 8px 40px rgba(0, 0, 0, 0.10), 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shape-a: rgba(220, 38, 38, 0.04);
+  --shape-b: rgba(185, 28, 28, 0.03);
+  --shape-c: rgba(239, 68, 68, 0.03);
+  --glow-primary: rgba(220, 38, 38, 0.12);
+  --glow-secondary: rgba(239, 68, 68, 0.08);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
 }
 
 :root[data-theme='dark'] {
-  --bg: #050c1a;
-  --bg-elevated: rgba(8, 18, 40, 0.85);
-  --bg-panel: rgba(10, 22, 48, 0.72);
-  --text-primary: #e8f0fe;
-  --text-secondary: #94afd4;
-  --text-tertiary: #566f94;
-  --border: rgba(100, 160, 255, 0.12);
-  --accent: #60a5fa;
-  --accent-2: #38bdf8;
-  --accent-3: #818cf8;
-  --shadow-soft: 0 24px 56px rgba(0, 5, 18, 0.60);
-  --shadow-float: 0 18px 42px rgba(0, 8, 28, 0.70);
-  --shape-a: rgba(96, 165, 250, 0.18);
-  --shape-b: rgba(56, 189, 248, 0.14);
-  --shape-c: rgba(129, 140, 248, 0.12);
-  --glow-primary: rgba(96, 165, 250, 0.28);
-  --glow-secondary: rgba(56, 189, 248, 0.22);
+  --bg: #1a1a1a;
+  --bg-elevated: #242424;
+  --bg-panel: #2a2a2a;
+  --bg-subtle: #313131;
+  --text-primary: #fafaf9;
+  --text-secondary: #a8a29e;
+  --text-tertiary: #78716c;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --accent: #ef4444;
+  --accent-hover: #dc2626;
+  --accent-2: #f87171;
+  --accent-3: #fca5a5;
+  --accent-muted: rgba(239, 68, 68, 0.12);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.30), 0 4px 16px rgba(0, 0, 0, 0.20);
+  --shadow-float: 0 4px 24px rgba(0, 0, 0, 0.35), 0 1px 4px rgba(0, 0, 0, 0.25);
+  --shadow-lifted: 0 8px 40px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shape-a: rgba(239, 68, 68, 0.06);
+  --shape-b: rgba(220, 38, 38, 0.05);
+  --shape-c: rgba(248, 113, 113, 0.04);
+  --glow-primary: rgba(239, 68, 68, 0.18);
+  --glow-secondary: rgba(248, 113, 113, 0.12);
 }
 
 @layer base {
   * {
-    transition: color 220ms ease, background-color 280ms ease, border-color 240ms ease, box-shadow 280ms ease;
+    transition: color 180ms ease, background-color 220ms ease, border-color 180ms ease, box-shadow 220ms ease;
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
   }
 
   html {
@@ -56,30 +73,43 @@
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
     min-height: 100vh;
     color: var(--text-primary);
     background-color: var(--bg);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
     overflow-x: hidden;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     color: var(--text-primary);
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
   }
+
+  h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.04em; }
+  h2 { font-size: 1.875rem; }
+  h3 { font-size: 1.375rem; }
 
   p, span, li, label {
     color: var(--text-secondary);
+    line-height: 1.65;
   }
 
   :where(input, textarea, select) {
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
     color: var(--text-primary);
+    border-radius: var(--radius-md);
+    font-family: inherit;
   }
 
   input[type="password"]::-ms-reveal,
@@ -100,12 +130,20 @@
   }
 
   :where(button, a, input, textarea, select):focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
   }
 
   @media (max-width: 640px) {
-    html { font-size: 14px; }
+    html { font-size: 15px; }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
   }
 }
 
@@ -117,171 +155,176 @@
   .clean-shell {
     position: relative;
     isolation: isolate;
+    background-color: var(--bg);
   }
 
   .soft-topbar {
     @apply sticky top-0 z-50;
     border-bottom: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  :root[data-theme='dark'] .soft-topbar {
+    background: rgba(26, 26, 26, 0.92);
   }
 
   .glass-card,
-  .minimal-panel,
-  .elevated-panel {
+  .minimal-panel {
     border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    background: var(--bg-panel);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(16px) saturate(140%);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
   }
 
   .elevated-panel {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
     box-shadow: var(--shadow-float);
   }
 
   .glow-card {
     border: 1px solid var(--border);
-    border-radius: 1.25rem;
-    background: var(--bg-panel);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated);
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(16px) saturate(140%);
-    transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 280ms ease,
-                border-color 280ms ease;
+    transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 250ms ease,
+                border-color 250ms ease;
   }
 
   .glow-card:hover {
-    transform: translateY(-6px);
-    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
-    box-shadow:
-      var(--shadow-float),
-      0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
-      0 20px 60px var(--glow-primary);
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    box-shadow: var(--shadow-lifted);
   }
 
   .surface-button {
-    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 86%, transparent);
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-medium;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
     color: var(--text-primary);
+    box-shadow: var(--shadow-xs);
+    transition: background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .surface-button:hover {
+    background: var(--bg-subtle);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
   }
 
   .theme-icon {
     @apply inline-flex h-6 w-6 items-center justify-center rounded-full;
-    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    background: var(--accent-muted);
+    color: var(--accent);
   }
 
   .soft-input {
-    @apply w-full rounded-2xl px-4 py-3;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 85%, transparent);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10);
+    @apply w-full rounded-xl px-4 py-3;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
     color: var(--text-primary);
-    transition: border-color 200ms ease, box-shadow 200ms ease;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    box-shadow: var(--shadow-xs);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
   }
 
   .soft-input:focus {
-    border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+    border-color: var(--accent);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.10),
-      0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+      var(--shadow-xs),
+      0 0 0 3px var(--accent-muted);
     outline: none;
   }
 
   .section-title {
-    @apply font-display text-3xl font-bold;
+    @apply text-3xl font-bold;
     color: var(--text-primary);
+    letter-spacing: -0.03em;
   }
 
   .primary-cta,
   .neon-button {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-bold;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-    box-shadow: 0 8px 24px var(--glow-primary);
-    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 220ms ease;
+    @apply inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-semibold;
+    color: #ffffff;
+    background: var(--accent);
+    box-shadow: var(--shadow-xs);
+    transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    letter-spacing: -0.01em;
   }
 
   .primary-cta:hover,
   .neon-button:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 14px 32px var(--glow-primary), 0 4px 12px var(--glow-secondary);
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .primary-cta:active,
+  .neon-button:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-xs);
   }
 
   .secondary-cta,
   .neon-button-outline {
-    @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
+    @apply inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
     color: var(--text-primary);
-    transition: transform 220ms ease, border-color 220ms ease;
+    box-shadow: var(--shadow-xs);
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    letter-spacing: -0.01em;
   }
 
   .secondary-cta:hover,
   .neon-button-outline:hover {
+    background: var(--bg-subtle);
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border-strong));
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
   }
 
   .tab-chip {
     @apply whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium;
-    border: 1px solid var(--border);
-    background: color-mix(in srgb, var(--bg-elevated) 76%, transparent);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
     color: var(--text-secondary);
+    transition: all 180ms ease;
+  }
+
+  .tab-chip:hover {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
   }
 
   .tab-chip-active {
     @apply whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-    box-shadow: 0 8px 24px var(--glow-primary);
+    color: #ffffff;
+    background: var(--accent);
+    border: 1px solid transparent;
   }
 
   .gradient-text-flow,
   .neon-text {
-    background-image: linear-gradient(
-      135deg,
-      var(--accent) 0%,
-      var(--accent-2) 40%,
-      var(--accent-3) 70%,
-      var(--accent) 100%
-    );
-    background-size: 250% 250%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: textShift 8s ease infinite;
+    color: var(--accent);
   }
 
   .hero-gradient-text {
-    background-image: linear-gradient(
-      135deg,
-      var(--text-primary) 0%,
-      var(--accent) 45%,
-      var(--accent-2) 75%,
-      var(--accent-3) 100%
-    );
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: textShift 10s ease infinite;
+    color: var(--accent);
   }
 
   .lift-card {
-    transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 280ms ease;
+    transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 250ms ease;
   }
 
   .lift-card:hover {
-    transform: translateY(-6px);
-    box-shadow:
-      0 20px 40px var(--glow-primary),
-      0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lifted);
   }
 
   .float-slow {
@@ -291,7 +334,7 @@
   .offset-card-a { transform: translateY(14px); }
   .offset-card-b { transform: translateY(-10px); }
 
-  .mobile-section { @apply py-8 sm:py-12 lg:py-16; }
+  .mobile-section { @apply py-8 sm:py-14 lg:py-20; }
   .mobile-table-wrapper { @apply overflow-x-auto -mx-4 sm:mx-0; }
   .mobile-table { @apply min-w-full; }
 
@@ -316,41 +359,41 @@
   }
 
   .stat-pill {
-    @apply rounded-2xl p-5;
+    @apply rounded-xl p-5;
     border: 1px solid var(--border);
-    background: var(--bg-panel);
+    background: var(--bg-elevated);
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(14px);
-    transition: transform 280ms cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 280ms ease,
-                border-color 280ms ease;
+    transition: transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 250ms ease,
+                border-color 250ms ease;
   }
 
   .stat-pill:hover {
-    transform: translateY(-4px) scale(1.02);
-    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-    box-shadow:
-      var(--shadow-float),
-      0 0 40px var(--glow-primary);
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+    box-shadow: var(--shadow-lifted);
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium;
+    background: var(--accent-muted);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
   }
 }
 
 .animated-gradient-bg,
 .aurora-shell {
-  background:
-    radial-gradient(ellipse 80% 50% at 10% 10%, var(--shape-a), transparent),
-    radial-gradient(ellipse 60% 60% at 85% 20%, var(--shape-b), transparent),
-    radial-gradient(ellipse 70% 50% at 50% 95%, var(--shape-c), transparent),
-    var(--bg);
-  background-size: 200% 200%;
-  animation: ambientShift 24s ease-in-out infinite;
-}
-
-@keyframes ambientShift {
-  0%   { background-position: 0% 50%, 100% 30%, 50% 100%, 0% 50%; }
-  33%  { background-position: 60% 20%, 40% 70%, 80% 40%, 60% 20%; }
-  66%  { background-position: 100% 50%, 0% 40%, 20% 80%, 100% 50%; }
-  100% { background-position: 0% 50%, 100% 30%, 50% 100%, 0% 50%; }
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 5% 5%, var(--shape-a), transparent),
+    radial-gradient(ellipse 50% 60% at 90% 15%, var(--shape-b), transparent),
+    radial-gradient(ellipse 60% 40% at 50% 100%, var(--shape-c), transparent);
 }
 
 @keyframes textShift {
@@ -361,8 +404,8 @@
 
 @keyframes floatSlow {
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33%       { transform: translateY(-10px) rotate(1deg); }
-  66%       { transform: translateY(-5px) rotate(-1deg); }
+  33%       { transform: translateY(-8px) rotate(0.5deg); }
+  66%       { transform: translateY(-4px) rotate(-0.5deg); }
 }
 
 @keyframes marquee {
@@ -371,25 +414,34 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50%       { opacity: 0.9; transform: scale(1.08); }
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.05); }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-::-webkit-scrollbar { width: 8px; height: 8px; }
+@keyframes ambientShift {
+  0%   { background-position: 0% 50%, 100% 30%, 50% 100%; }
+  50%  { background-position: 60% 20%, 40% 70%, 80% 40%; }
+  100% { background-position: 0% 50%, 100% 30%, 50% 100%; }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
 
 ::-webkit-scrollbar-track {
-  background: color-mix(in srgb, var(--bg) 90%, #000 10%);
+  background: var(--bg-subtle);
 }
 
 ::-webkit-scrollbar-thumb {
   border-radius: 9999px;
-  border: 2px solid color-mix(in srgb, var(--bg) 92%, #000 8%);
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  background: color-mix(in srgb, var(--accent) 40%, var(--text-tertiary));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
 }
 
 @media (max-width: 640px) {

@@ -126,3 +126,14 @@ test-results/
 playwright-report/
 playwright/.cache/
 .vercel
+
+# Replit-specific files
+.replit
+replit.md
+.upm/
+.config/
+.cache/
+.local/
+main.py
+pyproject.toml
+uv.lock
