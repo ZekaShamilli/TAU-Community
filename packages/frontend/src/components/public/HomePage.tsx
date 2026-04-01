@@ -798,48 +798,62 @@ const HomePage: React.FC = () => {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="mt-24"
           >
-            <div className="cta-banner rounded-3xl px-8 py-16 text-center text-white relative overflow-hidden">
-              <div className="relative z-10 flex flex-col items-center gap-6">
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2, duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-                  className="text-5xl mb-2"
-                >
-                  🚀
-                </motion.div>
-                <div>
-                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white">
+            <div className="cta-banner rounded-3xl text-white relative overflow-hidden">
+              {/* Decorative rings */}
+              <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full border border-white/10" />
+              <div className="absolute -top-10 -right-10 w-52 h-52 rounded-full border border-white/10" />
+              <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border border-white/10" />
+              <div className="absolute -bottom-12 -left-12 w-56 h-56 rounded-full border border-white/10" />
+
+              {/* Content */}
+              <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10 px-10 py-14">
+                {/* Left: text */}
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-5 max-w-lg">
+                  {/* Badge */}
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse" />
+                    TAU Community
+                  </span>
+
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white leading-tight">
                     {t('home.ctaTitle')}
                   </h2>
-                  <p className="mt-3 text-base text-red-100 max-w-md mx-auto leading-relaxed">
+                  <p className="text-base text-white/70 leading-relaxed">
                     {t('home.ctaDesc')}
                   </p>
+
+                  {/* Trust pills */}
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-white/70 font-medium">
+                    {[t('home.trustFree'), t('home.trustNoSpam')].map((label) => (
+                      <span key={label} className="flex items-center gap-1.5">
+                        <svg className="w-4 h-4 text-white/50" viewBox="0 0 16 16" fill="none">
+                          <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
+                          <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        {label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-3">
+
+                {/* Right: buttons */}
+                <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto lg:w-auto shrink-0">
                   <motion.button
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.04, y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => navigate('/signup')}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-[var(--accent)] shadow-lg transition hover:shadow-xl"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-[var(--accent)] shadow-lg transition hover:shadow-xl whitespace-nowrap"
                   >
                     {t('home.ctaButton')}
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileHover={{ scale: 1.04, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => navigate('/signup')}
-                    className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/30 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                    onClick={() => navigate('/clubs')}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 whitespace-nowrap"
                   >
                     {t('home.ctaSecondary')}
                   </motion.button>
-                </div>
-
-                {/* Trust indicators */}
-                <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-2 text-sm text-red-100 font-medium">
-                  <span className="flex items-center gap-1.5">✅ {t('home.trustFree')}</span>
-                  <span className="flex items-center gap-1.5">✅ {t('home.trustNoSpam')}</span>
                 </div>
               </div>
             </div>
