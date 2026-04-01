@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { clubService } from '../../services/clubService';
 import { Club, CreateClubRequest } from '../../types';
 
@@ -12,6 +13,7 @@ interface CreateClubFormData {
 }
 
 const ClubManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -293,7 +295,7 @@ const ClubManagement: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="flex justify-between items-center"
       >
-        <h2 className="text-3xl font-bold neon-text">Club Management</h2>
+        <h2 className="text-3xl font-bold neon-text">{t('admin.clubManagement')}</h2>
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -352,13 +354,13 @@ const ClubManagement: React.FC = () => {
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Club Name</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">President</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Activities</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Applications</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Created</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.clubName')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.president')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.status')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.totalActivities')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.totalApplications')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.created')}</th>
+                <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -385,7 +387,7 @@ const ClubManagement: React.FC = () => {
                           <p className="text-sm text-text-tertiary">{club.president.email}</p>
                         </div>
                       ) : (
-                        <p className="text-text-tertiary">No president assigned</p>
+                        <p className="text-text-tertiary">{t('admin.noPresident')}</p>
                       )}
                     </td>
                     <td className="px-6 py-4">
@@ -394,7 +396,7 @@ const ClubManagement: React.FC = () => {
                           ? 'bg-green-500/20 text-green-400 border border-green-500/50'
                           : 'bg-gray-500/20 text-text-tertiary border border-gray-500/50'
                       }`}>
-                        {club.is_active ? 'Active' : 'Inactive'}
+                        {club.is_active ? t('admin.active') : t('admin.inactive')}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -533,12 +535,12 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Create New Club</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.createNewClub')}</h3>
               
               {existingClubNames.length > 0 && (
                 <div className="mb-6 p-4 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl">
                   <p className="text-sm text-[var(--text-secondary)] mb-2">
-                    <strong>Existing clubs:</strong> {existingClubNames.join(', ')}
+                    <strong>{t('admin.existingClubs')}:</strong> {existingClubNames.join(', ')}
                   </p>
                   <p className="text-sm text-[var(--text-secondary)]">
                     Please choose a unique name for your new club.
@@ -549,18 +551,18 @@ const ClubManagement: React.FC = () => {
               <form onSubmit={handleSubmit(handleCreateClub)} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Club Name *
+                    {t('admin.clubName')} *
                   </label>
                   <Controller
                     name="name"
                     control={control}
-                    rules={{ required: 'Club name is required' }}
+                    rules={{ required: t('admin.clubNameRequired') }}
                     render={({ field }) => (
                       <input
                         {...field}
                         type="text"
                         className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
-                        placeholder="Enter club name"
+                        placeholder={t('admin.clubNamePlaceholder')}
                       />
                     )}
                   />
@@ -576,13 +578,13 @@ const ClubManagement: React.FC = () => {
                   <Controller
                     name="description"
                     control={control}
-                    rules={{ required: 'Description is required' }}
+                    rules={{ required: t('admin.descriptionRequired') }}
                     render={({ field }) => (
                       <textarea
                         {...field}
                         rows={4}
                         className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
-                        placeholder="Enter club description"
+                        placeholder={t('admin.clubDescPlaceholder')}
                       />
                     )}
                   />
@@ -614,7 +616,7 @@ const ClubManagement: React.FC = () => {
                     disabled={createClubMutation.isPending}
                     className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {createClubMutation.isPending ? 'Creating...' : 'Create Club'}
+                    {createClubMutation.isPending ? t('admin.creating') : t('admin.createClub')}
                   </motion.button>
                 </div>
               </form>
@@ -640,7 +642,7 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Club Details</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.clubDetails')}</h3>
               
               <div className="space-y-6">
                 <div>
@@ -649,28 +651,28 @@ const ClubManagement: React.FC = () => {
                 </div>
 
                 <div>
-                  <h5 className="text-sm font-semibold text-text-secondary mb-2">Description</h5>
+                  <h5 className="text-sm font-semibold text-text-secondary mb-2">{t('admin.description')}</h5>
                   <p className="text-text-primary">{selectedClub.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <h5 className="text-sm font-semibold text-text-secondary mb-2">President</h5>
+                    <h5 className="text-sm font-semibold text-text-secondary mb-2">{t('admin.president')}</h5>
                     {selectedClub.president ? (
                       <div>
                         <p className="text-text-primary">{selectedClub.president.first_name} {selectedClub.president.last_name}</p>
                         <p className="text-text-tertiary text-sm">{selectedClub.president.email}</p>
                       </div>
                     ) : (
-                      <p className="text-text-tertiary">No president assigned</p>
+                      <p className="text-text-tertiary">{t('admin.noPresident')}</p>
                     )}
                   </div>
 
                   <div>
-                    <h5 className="text-sm font-semibold text-text-secondary mb-2">Statistics</h5>
+                    <h5 className="text-sm font-semibold text-text-secondary mb-2">{t('admin.statistics')}</h5>
                     <p className="text-text-primary">Activities: {selectedClub.activities_count || 0}</p>
                     <p className="text-text-primary">Applications: {selectedClub.applications_count || 0}</p>
-                    <p className="text-text-primary">Status: {selectedClub.is_active ? 'Active' : 'Inactive'}</p>
+                    <p className="text-text-primary">Status: {selectedClub.is_active ? t('admin.active') : t('admin.inactive')}</p>
                   </div>
                 </div>
 
@@ -712,17 +714,17 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Edit Club</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.editClub')}</h3>
 
               <form onSubmit={handleEditSubmit(handleEditClub)} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Club Name *
+                    {t('admin.clubName')} *
                   </label>
                   <Controller
                     name="name"
                     control={editControl}
-                    rules={{ required: 'Club name is required' }}
+                    rules={{ required: t('admin.clubNameRequired') }}
                     render={({ field }) => (
                       <input
                         {...field}
@@ -743,7 +745,7 @@ const ClubManagement: React.FC = () => {
                   <Controller
                     name="description"
                     control={editControl}
-                    rules={{ required: 'Description is required' }}
+                    rules={{ required: t('admin.descriptionRequired') }}
                     render={({ field }) => (
                       <textarea
                         {...field}
@@ -774,7 +776,7 @@ const ClubManagement: React.FC = () => {
                     disabled={updateClubMutation.isPending}
                     className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {updateClubMutation.isPending ? 'Updating...' : 'Update Club'}
+                    {updateClubMutation.isPending ? t('admin.updating') : t('admin.updateClub')}
                   </motion.button>
                 </div>
               </form>
@@ -800,7 +802,7 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-md w-full"
             >
-              <h3 className="text-2xl font-bold text-red-400 mb-4">Delete Club</h3>
+              <h3 className="text-2xl font-bold text-red-400 mb-4">{t('admin.deleteClubTitle')}</h3>
               <p className="text-text-secondary mb-6">
                 Are you sure you want to delete "{selectedClub.name}"? This action cannot be undone and will remove all associated activities and applications.
               </p>
@@ -821,7 +823,7 @@ const ClubManagement: React.FC = () => {
                   disabled={deleteClubMutation.isPending}
                   className="flex-1 px-6 py-3 rounded-xl bg-red-500 text-text-primary font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {deleteClubMutation.isPending ? 'Deleting...' : 'Delete'}
+                  {deleteClubMutation.isPending ? t('admin.deleting') : t('admin.delete')}
                 </motion.button>
               </div>
             </motion.div>
@@ -846,7 +848,7 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-md w-full"
             >
-              <h3 className="text-2xl font-bold text-yellow-400 mb-4">Archive Club</h3>
+              <h3 className="text-2xl font-bold text-yellow-400 mb-4">{t('admin.archiveClubTitle')}</h3>
               <p className="text-text-secondary mb-6">
                 Are you sure you want to archive "{selectedClub.name}"? This will deactivate the club but preserve all data. You can reactivate it later.
               </p>
@@ -867,7 +869,7 @@ const ClubManagement: React.FC = () => {
                   disabled={archiveClubMutation.isPending}
                   className="flex-1 px-6 py-3 rounded-xl bg-yellow-500 text-text-primary font-semibold hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {archiveClubMutation.isPending ? 'Archiving...' : 'Archive'}
+                  {archiveClubMutation.isPending ? t('admin.archiving') : t('admin.archive')}
                 </motion.button>
               </div>
             </motion.div>
@@ -892,7 +894,7 @@ const ClubManagement: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-md w-full"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Change Club President</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.changeClubPresident')}</h3>
               
               <div className="space-y-4 mb-6">
                 <p className="text-text-primary">
@@ -915,7 +917,7 @@ const ClubManagement: React.FC = () => {
                     onChange={(e) => setSelectedPresidentId(e.target.value)}
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
                   >
-                    <option value="">No President</option>
+                    <option value="">{t('admin.noPresidentOption')}</option>
                     {availablePresidents?.map((user: any) => (
                       <option key={user.id} value={user.id} className="bg-[var(--bg-elevated)]">
                         {user.displayName}
@@ -941,7 +943,7 @@ const ClubManagement: React.FC = () => {
                   disabled={changePresidentMutation.isPending || !selectedPresidentId}
                   className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {changePresidentMutation.isPending ? 'Updating...' : 'Update President'}
+                  {changePresidentMutation.isPending ? t('admin.updating') : t('admin.updatePresident')}
                 </motion.button>
               </div>
             </motion.div>

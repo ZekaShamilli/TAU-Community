@@ -1,6 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../lib/api';
 
 interface AuditEntry {
@@ -19,6 +20,7 @@ interface AuditEntry {
 }
 
 const AuditLogViewer: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedEntry, setSelectedEntry] = useState<AuditEntry | null>(null);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -98,26 +100,26 @@ const AuditLogViewer: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">User Role</label>
+              <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.userRole')}</label>
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
                 className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors [&>option]:bg-[var(--bg-elevated)] [&>option]:text-text-primary"
               >
-                <option value="">All Roles</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
-                <option value="CLUB_PRESIDENT">Club President</option>
-                <option value="STUDENT">Student</option>
+                <option value="">{t('admin.allRoles')}</option>
+                <option value="SUPER_ADMIN">{t('admin.superAdmin')}</option>
+                <option value="CLUB_PRESIDENT">{t('admin.clubPresident')}</option>
+                <option value="STUDENT">{t('admin.student')}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-text-secondary mb-2">Resource</label>
+              <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.resource')}</label>
               <select
                 value={resourceFilter}
                 onChange={(e) => setResourceFilter(e.target.value)}
                 className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors [&>option]:bg-[var(--bg-elevated)] [&>option]:text-text-primary"
               >
-                <option value="">All Resources</option>
+                <option value="">{t('admin.allResources')}</option>
                 <option value="CLUB">Club</option>
                 <option value="ACTIVITY">Activity</option>
                 <option value="APPLICATION">Application</option>
@@ -135,14 +137,14 @@ const AuditLogViewer: React.FC = () => {
           <table className="w-full table-fixed">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="w-[140px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Timestamp</th>
-                <th className="w-[200px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">User</th>
-                <th className="w-[120px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Role</th>
-                <th className="w-[120px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Action</th>
-                <th className="w-[200px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Resource</th>
-                <th className="w-[100px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
-                <th className="w-[140px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">IP Address</th>
-                <th className="w-[80px] px-6 py-4 text-right text-sm font-semibold text-text-secondary">Actions</th>
+                <th className="w-[140px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.timestamp')}</th>
+                <th className="w-[200px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.name')}</th>
+                <th className="w-[120px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.role')}</th>
+                <th className="w-[120px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
+                <th className="w-[200px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.resource')}</th>
+                <th className="w-[100px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.status')}</th>
+                <th className="w-[140px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.ipAddress')}</th>
+                <th className="w-[80px] px-6 py-4 text-right text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -168,12 +170,12 @@ const AuditLogViewer: React.FC = () => {
                           <p className="text-sm text-text-tertiary truncate">{entry.user.email}</p>
                         </div>
                       ) : (
-                        <p className="text-text-tertiary">Unknown User</p>
+                        <p className="text-text-tertiary">{t('admin.unknownUser')}</p>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap ${getRoleColor(entry.user?.role || '')}`}>
-                        {entry.user?.role?.replace('_', ' ') || 'Unknown'}
+                        {entry.user?.role?.replace('_', ' ') || t('admin.unknown')}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -187,7 +189,7 @@ const AuditLogViewer: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap ${entry.success ? 'bg-green-500/20 text-green-400 border-green-500/50' : 'bg-red-500/20 text-red-400 border-red-500/50'}`}>
-                        {entry.success ? 'Success' : 'Failed'}
+                        {entry.success ? t('admin.success') : t('admin.failed')}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-text-secondary font-mono text-sm whitespace-nowrap">
@@ -234,7 +236,7 @@ const AuditLogViewer: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Audit Log Details</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.auditLogDetails')}</h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -242,7 +244,7 @@ const AuditLogViewer: React.FC = () => {
                     <p className="text-text-primary">{new Date(selectedEntry.timestamp).toLocaleString()}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">User</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.name')}</p>
                     <p className="text-text-primary">
                       {selectedEntry.user
                         ? `${selectedEntry.user.firstName} ${selectedEntry.user.lastName} (${selectedEntry.user.email})`
@@ -250,41 +252,41 @@ const AuditLogViewer: React.FC = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Role</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.role')}</p>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getRoleColor(selectedEntry.user?.role || '')}`}>
-                      {selectedEntry.user?.role?.replace('_', ' ') || 'Unknown'}
+                      {selectedEntry.user?.role?.replace('_', ' ') || t('admin.unknown')}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Action</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.actions')}</p>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getActionColor(selectedEntry.action)}`}>
                       {selectedEntry.action.replace('_', ' ')}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Resource</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.resource')}</p>
                     <p className="text-text-primary">{selectedEntry.resource} (ID: {selectedEntry.resourceId})</p>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Status</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.status')}</p>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedEntry.success ? 'bg-green-100 text-green-700 border-green-300' : 'bg-red-100 text-red-700 border-red-300'}`}>
-                      {selectedEntry.success ? 'Success' : 'Failed'}
+                      {selectedEntry.success ? t('admin.success') : t('admin.failed')}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">IP Address</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.ipAddress')}</p>
                     <p className="text-text-primary font-mono">{selectedEntry.ipAddress}</p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-text-secondary mb-1">User Agent</p>
+                  <p className="text-sm text-text-secondary mb-1">{t('admin.userAgent')}</p>
                   <p className="text-text-primary font-mono text-xs bg-[var(--bg-subtle)] p-3 rounded-lg break-all">
                     {selectedEntry.userAgent}
                   </p>
                 </div>
                 {selectedEntry.changes && (
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Changes</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.changes')}</p>
                     <pre className="text-text-primary font-mono text-xs bg-[var(--bg-subtle)] p-3 rounded-lg overflow-auto">
                       {JSON.stringify(selectedEntry.changes, null, 2)}
                     </pre>
@@ -292,7 +294,7 @@ const AuditLogViewer: React.FC = () => {
                 )}
                 {selectedEntry.errorMessage && (
                   <div>
-                    <p className="text-sm text-text-secondary mb-1">Error Message</p>
+                    <p className="text-sm text-text-secondary mb-1">{t('admin.errorMessage')}</p>
                     <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-3">
                       <p className="text-red-400">{selectedEntry.errorMessage}</p>
                     </div>

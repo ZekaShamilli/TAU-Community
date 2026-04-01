@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../lib/api';
 
 interface ContentItem {
@@ -26,6 +27,7 @@ interface ContentData {
 }
 
 const ContentModeration: React.FC = () => {
+  const { t } = useTranslation();
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
@@ -223,7 +225,7 @@ const ContentModeration: React.FC = () => {
       >
         <div className="flex items-center gap-4">
           <div className="flex-1">
-            <label className="block text-sm font-medium text-text-secondary mb-2">Filter by Club</label>
+            <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.filterByClub')}</label>
             <select
               value={clubFilter}
               onChange={(e) => setClubFilter(e.target.value)}
@@ -248,21 +250,21 @@ const ContentModeration: React.FC = () => {
       >
         {filteredActivities.length === 0 ? (
           <div className="p-8 text-center">
-            <p className="text-text-tertiary">No activities to review at this time.</p>
+            <p className="text-text-tertiary">{t('admin.noActivitiesToReview')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[var(--border)]">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Type</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Title</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Description</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Club</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Date & Time</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Author</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Created</th>
-                  <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.type')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.title')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.description')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.club_col')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.dateTime')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.author')}</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.created')}</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -289,7 +291,7 @@ const ContentModeration: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-text-secondary max-w-md truncate">
-                          {item.description || 'No description'}
+                          {item.description || t('admin.noDescription')}
                         </p>
                       </td>
                       <td className="px-6 py-4 text-text-secondary">
@@ -302,7 +304,7 @@ const ContentModeration: React.FC = () => {
                             <p className="text-sm text-text-tertiary">{item.time}</p>
                           </div>
                         ) : (
-                          <p className="text-text-tertiary">Not set</p>
+                          <p className="text-text-tertiary">{t('admin.notSet')}</p>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -314,7 +316,7 @@ const ContentModeration: React.FC = () => {
                             <p className="text-sm text-text-tertiary">{item.author.email}</p>
                           </div>
                         ) : (
-                          <p className="text-text-tertiary">Unknown</p>
+                          <p className="text-text-tertiary">{t('admin.unknown')}</p>
                         )}
                       </td>
                       <td className="px-6 py-4 text-text-secondary">
@@ -405,7 +407,7 @@ const ContentModeration: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Activity Details</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.activityDetails')}</h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{getTypeIcon(selectedContent.type)}</span>
@@ -424,7 +426,7 @@ const ContentModeration: React.FC = () => {
                 <div>
                   <p className="text-sm text-text-tertiary mb-1">Description</p>
                   <p className="text-text-primary bg-[var(--bg-subtle)] p-4 rounded-lg">
-                    {selectedContent.description || 'No description provided'}
+                    {selectedContent.description || t('admin.noDescriptionProvided')}
                   </p>
                 </div>
 
@@ -437,7 +439,7 @@ const ContentModeration: React.FC = () => {
 
                 {(selectedContent.date || selectedContent.time) && (
                   <div>
-                    <p className="text-sm text-text-tertiary mb-1">Activity Date & Time</p>
+                    <p className="text-sm text-text-tertiary mb-1">{t('admin.activityDateTime')}</p>
                     <div className="bg-[var(--bg-subtle)] p-4 rounded-lg">
                       {selectedContent.date && (
                         <p className="font-medium text-text-primary">Date: {selectedContent.date}</p>
@@ -498,38 +500,38 @@ const ContentModeration: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
               className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
             >
-              <h3 className="text-2xl font-bold neon-text mb-6">Edit Activity</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.editActivity')}</h3>
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Activity Title *
+                    {t('admin.activityTitle')}
                   </label>
                   <input
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
-                    placeholder="Enter title..."
+                    placeholder={t('admin.enterTitle')}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Description *
+                    {t('admin.description')} *
                   </label>
                   <textarea
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     rows={4}
                     className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
-                    placeholder="Enter description..."
+                    placeholder={t('admin.enterDescription')}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-2">
-                      Activity Date
+                      {t('admin.activityDate')}
                     </label>
                     <input
                       type="date"
@@ -540,7 +542,7 @@ const ContentModeration: React.FC = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-text-secondary mb-2">
-                      Activity Time
+                      {t('admin.activityTime')}
                     </label>
                     <input
                       type="time"
@@ -569,7 +571,7 @@ const ContentModeration: React.FC = () => {
                     disabled={updateContentMutation.isPending}
                     className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {updateContentMutation.isPending ? 'Saving...' : 'Save Changes'}
+                    {updateContentMutation.isPending ? t('admin.saving') : t('admin.saveChanges')}
                   </motion.button>
                 </div>
               </div>

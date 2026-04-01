@@ -2,10 +2,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../lib/api';
 import { coinService } from '../../services/coinService';
 
 const UserManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [rowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
@@ -156,7 +158,7 @@ const UserManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-bold neon-text">User Management</motion.h2>
+        <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-bold neon-text">{t('admin.userManagement')}</motion.h2>
         <motion.button
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -166,7 +168,7 @@ const UserManagement: React.FC = () => {
           className="px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-medium hover:shadow-lg hover:shadow-yellow-500/50 transition-all flex items-center gap-2"
         >
           <span>{'\u{1FA99}'}</span>
-          {showTransactions ? 'Hide' : 'View'} Coin Transactions
+          {showTransactions ? t('admin.hideCoinTransactions') : t('admin.viewCoinTransactions')}
         </motion.button>
       </div>
 
@@ -177,8 +179,8 @@ const UserManagement: React.FC = () => {
           className="glass-card p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-text-primary">Coin Transaction History</h3>
-            <p className="text-text-tertiary text-sm">{transactions?.length || 0} transactions</p>
+            <h3 className="text-xl font-bold text-text-primary">{t('admin.coinTransactionHistory')}</h3>
+            <p className="text-text-tertiary text-sm">{transactions?.length || 0} {t('admin.transactions')}</p>
           </div>
           {transactions && transactions.length > 0 ? (
             <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -230,7 +232,7 @@ const UserManagement: React.FC = () => {
           ) : (
             <div className="text-center py-8">
               <span className="text-6xl mb-4 block">{'\u{1F4CA}'}</span>
-              <p className="text-text-tertiary">No transactions yet</p>
+              <p className="text-text-tertiary">{t('admin.noTransactions')}</p>
             </div>
           )}
         </motion.div>
@@ -239,19 +241,19 @@ const UserManagement: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Search</label>
-            <input type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} placeholder="Search users..." className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors" />
+            <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.search')}</label>
+            <input type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} placeholder={t('admin.searchUsers')} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-secondary mb-2">Filter by Role</label>
+            <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.filterByRole')}</label>
             <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors">
-              <option value="">All Roles</option>
-              <option value="SUPER_ADMIN">Super Admin</option>
-              <option value="CLUB_PRESIDENT">Club President</option>
-              <option value="STUDENT">Student</option>
+              <option value="">{t('admin.allRoles')}</option>
+              <option value="SUPER_ADMIN">{t('admin.superAdmin')}</option>
+              <option value="CLUB_PRESIDENT">{t('admin.clubPresident')}</option>
+              <option value="STUDENT">{t('admin.student')}</option>
             </select>
           </div>
-          <div className="flex items-end"><p className="text-text-tertiary">{users.length} users found</p></div>
+          <div className="flex items-end"><p className="text-text-tertiary">{users.length} {t('admin.usersFound')}</p></div>
         </div>
       </motion.div>
 
@@ -264,13 +266,13 @@ const UserManagement: React.FC = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Email</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Role</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Coins</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Joined</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Actions</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.name')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.email')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.role')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.coins')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.status')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.joined')}</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -288,7 +290,7 @@ const UserManagement: React.FC = () => {
                               <span>{userCoins.balance}</span>
                             </span>
                           </td>
-                          <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${user.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{user.isActive ? 'Active' : 'Inactive'}</span></td>
+                          <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${user.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{user.isActive ? t('admin.active') : t('admin.inactive')}</span></td>
                           <td className="px-6 py-4 text-text-secondary">{new Date(user.createdAt).toLocaleDateString()}</td>
                           <td className="px-6 py-4">
                             <div className="flex gap-2">
@@ -311,7 +313,7 @@ const UserManagement: React.FC = () => {
               </table>
             </div>
             <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border)]">
-              <p className="text-text-tertiary text-sm">Showing {page * rowsPerPage + 1} to {Math.min((page + 1) * rowsPerPage, users.length)} of {users.length} users</p>
+              <p className="text-text-tertiary text-sm">{t('admin.showing')} {page * rowsPerPage + 1} – {Math.min((page + 1) * rowsPerPage, users.length)} {t('admin.of')} {users.length}</p>
               <div className="flex gap-2">
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="px-4 py-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--bg-panel)] transition-colors">Previous</motion.button>
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(page + 1)} disabled={(page + 1) * rowsPerPage >= users.length} className="px-4 py-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--bg-panel)] transition-colors">Next</motion.button>
@@ -325,7 +327,7 @@ const UserManagement: React.FC = () => {
         {viewDialogOpen && selectedUser && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setViewDialogOpen(false)}>
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h3 className="text-2xl font-bold neon-text mb-6">User Details</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.userDetails')}</h3>
               {isLoadingDetails ? (
                 <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div></div>
               ) : (
@@ -333,22 +335,22 @@ const UserManagement: React.FC = () => {
                   <div><h4 className="text-xl font-bold text-text-primary">{selectedUser.firstName} {selectedUser.lastName}</h4><p className="text-text-tertiary">{selectedUser.email}</p></div>
                   <div className="grid grid-cols-2 gap-6">
                     <div><p className="text-sm text-text-tertiary mb-2">Role</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getRoleColor(selectedUser.role)}`}>{getRoleLabel(selectedUser.role)}</span></div>
-                    <div><p className="text-sm text-text-tertiary mb-2">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{selectedUser.isActive ? 'Active' : 'Inactive'}</span></div>
+                    <div><p className="text-sm text-text-tertiary mb-2">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{selectedUser.isActive ? t('admin.active') : t('admin.inactive')}</span></div>
                   </div>
                   <div><p className="text-sm text-text-tertiary mb-2">Joined</p><p className="text-text-primary">{new Date(selectedUser.createdAt).toLocaleDateString()}</p></div>
-                  <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">Club Memberships</h5>
+                  <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">{t('admin.clubMemberships')}</h5>
                     {userDetailsData?.clubs && userDetailsData.clubs.length > 0 ? (
                       <div className="space-y-3">{userDetailsData.clubs.map((club: any) => (<div key={club.id} className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4"><p className="font-medium text-text-primary">{club.name}</p><p className="text-sm text-text-tertiary">Role: {club.memberRole || 'Member'} {'\u2022'} Joined: {new Date(club.joinedAt).toLocaleDateString()}</p></div>))}</div>
-                    ) : (<p className="text-text-tertiary">Not a member of any clubs</p>)}
+                    ) : (<p className="text-text-tertiary">{t('admin.noClubMemberships')}</p>)}
                   </div>
                   {userDetailsData?.applications && userDetailsData.applications.length > 0 && (
-                    <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">Club Applications</h5>
+                    <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">{t('admin.clubApplications')}</h5>
                       <div className="space-y-3">{userDetailsData.applications.map((app: any) => (<div key={app.id} className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4"><p className="font-medium text-text-primary">{app.clubName}</p><div className="flex items-center gap-2 mt-2"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${app.status === 'APPROVED' ? 'bg-green-50 text-green-700 border-green-200' : app.status === 'REJECTED' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{app.status}</span><span className="text-sm text-text-tertiary">Applied: {new Date(app.createdAt).toLocaleDateString()}</span></div></div>))}</div>
                     </div>
                   )}
                 </div>
               )}
-              <div className="mt-8"><motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setViewDialogOpen(false)} className="w-full neon-button">Close</motion.button></div>
+              <div className="mt-8"><motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setViewDialogOpen(false)} className="w-full neon-button">{t('admin.close')}</motion.button></div>
             </motion.div>
           </motion.div>
         )}
@@ -358,12 +360,12 @@ const UserManagement: React.FC = () => {
         {deleteDialogOpen && userToDelete && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setDeleteDialogOpen(false)}>
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-md w-full">
-              <h3 className="text-2xl font-bold text-red-400 mb-4">Confirm Delete</h3>
+              <h3 className="text-2xl font-bold text-red-400 mb-4">{t('admin.confirmDelete')}</h3>
               <p className="text-text-secondary mb-2">Are you sure you want to delete user <strong className="text-text-primary">{userToDelete.firstName} {userToDelete.lastName}</strong>?</p>
-              <p className="text-text-tertiary text-sm mb-6">This action cannot be undone.</p>
+              <p className="text-text-tertiary text-sm mb-6">{t('admin.cannotUndo')}</p>
               <div className="flex gap-4">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDeleteDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => userToDelete && deleteUserMutation.mutate(userToDelete.id)} disabled={deleteUserMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-red-500 text-text-primary font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{deleteUserMutation.isPending ? 'Deleting...' : 'Delete'}</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDeleteDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">{t('admin.cancel')}</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => userToDelete && deleteUserMutation.mutate(userToDelete.id)} disabled={deleteUserMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-red-500 text-text-primary font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{deleteUserMutation.isPending ? t('admin.deleting') : t('admin.delete')}</motion.button>
               </div>
             </motion.div>
           </motion.div>
@@ -374,23 +376,23 @@ const UserManagement: React.FC = () => {
         {adjustCoinsDialogOpen && userToAdjust && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setAdjustCoinsDialogOpen(false)}>
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-md w-full">
-              <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">{'\u{1FA99}'} Adjust Coins</h3>
+              <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">{'\u{1FA99}'} {t('admin.adjustCoins')}</h3>
               <div className="mb-6">
                 <p className="text-text-primary font-medium">{userToAdjust.firstName} {userToAdjust.lastName}</p>
                 <p className="text-text-tertiary text-sm">{userToAdjust.email}</p>
-                <p className="text-yellow-400 mt-2">Current Balance: {coinBalances?.[userToAdjust.id]?.balance || 0} {'\u{1FA99}'}</p>
+                <p className="text-yellow-400 mt-2">{t('admin.currentBalance')}: {coinBalances?.[userToAdjust.id]?.balance || 0} {'\u{1FA99}'}</p>
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-text-secondary mb-2">Amount (use negative to remove)</label>
-                <input type="number" value={coinAmount} onChange={(e) => setCoinAmount(e.target.value)} placeholder="e.g., 10 or -5" className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors" />
+                <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.amount')}</label>
+                <input type="number" value={coinAmount} onChange={(e) => setCoinAmount(e.target.value)} placeholder={t('admin.amountPlaceholder')} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors" />
               </div>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-text-secondary mb-2">Reason</label>
-                <textarea value={coinReason} onChange={(e) => setCoinReason(e.target.value)} placeholder="e.g., Admin adjustment" rows={3} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors resize-none" />
+                <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.reason')}</label>
+                <textarea value={coinReason} onChange={(e) => setCoinReason(e.target.value)} placeholder={t('admin.reasonPlaceholder')} rows={3} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors resize-none" />
               </div>
               <div className="flex gap-4">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setAdjustCoinsDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAdjustCoins} disabled={adjustCoinsMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">{adjustCoinsMutation.isPending ? 'Adjusting...' : 'Adjust Coins'}</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setAdjustCoinsDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">{t('admin.cancel')}</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAdjustCoins} disabled={adjustCoinsMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">{adjustCoinsMutation.isPending ? t('admin.adjusting') : t('admin.adjustCoinsBtn')}</motion.button>
               </div>
             </motion.div>
           </motion.div>

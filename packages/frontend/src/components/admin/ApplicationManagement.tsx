@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm, Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../lib/api';
 
 interface Application {
@@ -25,6 +26,7 @@ interface ReviewFormData {
 }
 
 const ApplicationManagement: React.FC = () => {
+  const { t } = useTranslation();
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
@@ -93,19 +95,19 @@ const ApplicationManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-bold neon-text">Application Management</motion.h2>
+      <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-bold neon-text">{t('admin.applicationManagement')}</motion.h2>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="glass-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-[var(--border)]">
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Student</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Club</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Submitted</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Reviewed</th>
-                <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.student')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.club_col')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.status')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.submitted')}</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">{t('admin.reviewed')}</th>
+                <th className="px-6 py-4 text-right text-sm font-semibold text-text-secondary">{t('admin.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -118,7 +120,7 @@ const ApplicationManagement: React.FC = () => {
                         <p className="text-sm text-text-tertiary">{application.student?.email}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-text-primary">{application.club?.name || 'Unknown Club'}</td>
+                    <td className="px-6 py-4 text-text-primary">{application.club?.name || t('admin.unknownClub')}</td>
                     <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(application.status)}`}>{application.status}</span></td>
                     <td className="px-6 py-4 text-text-secondary">{new Date(application.submittedAt || application.submitted_at || application.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4 text-text-secondary">{application.reviewedAt || application.reviewed_at ? new Date(application.reviewedAt || application.reviewed_at).toLocaleDateString() : '-'}</td>
@@ -174,16 +176,16 @@ const ApplicationManagement: React.FC = () => {
         {viewDialogOpen && selectedApplication && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setViewDialogOpen(false)}>
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <h3 className="text-2xl font-bold neon-text mb-6">Application Details</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.appDetails')}</h3>
               <div className="space-y-4">
                 <div><h4 className="text-xl font-bold text-text-primary break-words">{selectedApplication.student?.firstName} {selectedApplication.student?.lastName}</h4><p className="text-text-tertiary break-all">{selectedApplication.student?.email}</p></div>
-                <div><p className="text-sm text-text-tertiary mb-1">Club</p><p className="text-text-primary break-words">{selectedApplication.club?.name || 'Unknown Club'}</p></div>
-                <div><p className="text-sm text-text-tertiary mb-1">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(selectedApplication.status)}`}>{selectedApplication.status}</span></div>
-                <div><p className="text-sm text-text-tertiary mb-1">Motivation</p><p className="text-text-primary break-words whitespace-pre-wrap">{selectedApplication.motivation}</p></div>
-                {selectedApplication.review_comments && (<div><p className="text-sm text-text-tertiary mb-1">Review Comments</p><p className="text-text-primary break-words whitespace-pre-wrap">{selectedApplication.review_comments}</p></div>)}
+                <div><p className="text-sm text-text-tertiary mb-1">{t('admin.club_col')}</p><p className="text-text-primary break-words">{selectedApplication.club?.name || t('admin.unknownClub')}</p></div>
+                <div><p className="text-sm text-text-tertiary mb-1">{t('admin.status')}</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(selectedApplication.status)}`}>{selectedApplication.status}</span></div>
+                <div><p className="text-sm text-text-tertiary mb-1">{t('admin.motivation')}</p><p className="text-text-primary break-words whitespace-pre-wrap">{selectedApplication.motivation}</p></div>
+                {selectedApplication.review_comments && (<div><p className="text-sm text-text-tertiary mb-1">{t('admin.reviewComments')}</p><p className="text-text-primary break-words whitespace-pre-wrap">{selectedApplication.review_comments}</p></div>)}
                 <div><p className="text-sm text-text-tertiary">Submitted: {new Date(selectedApplication.submitted_at).toLocaleString()}</p>{selectedApplication.reviewed_at && (<p className="text-sm text-text-tertiary">Reviewed: {new Date(selectedApplication.reviewed_at).toLocaleString()}</p>)}</div>
               </div>
-              <div className="mt-8"><motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setViewDialogOpen(false)} className="w-full neon-button">Close</motion.button></div>
+              <div className="mt-8"><motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setViewDialogOpen(false)} className="w-full neon-button">{t('admin.close')}</motion.button></div>
             </motion.div>
           </motion.div>
         )}
@@ -193,16 +195,16 @@ const ApplicationManagement: React.FC = () => {
         {reviewDialogOpen && selectedApplication && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setReviewDialogOpen(false)}>
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-md w-full">
-              <h3 className="text-2xl font-bold neon-text mb-6">Review Application</h3>
+              <h3 className="text-2xl font-bold neon-text mb-6">{t('admin.reviewApp')}</h3>
               <form onSubmit={handleSubmit((data) => selectedApplication && reviewApplicationMutation.mutate({ id: selectedApplication.id, data }))} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">Review Comments *</label>
-                  <Controller name="reviewComments" control={control} rules={{ required: 'Review comments are required' }} render={({ field }) => (<textarea {...field} rows={4} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none" placeholder="Provide feedback for the applicant..." />)} />
+                  <label className="block text-sm font-medium text-text-secondary mb-2">{t('admin.reviewComments')} *</label>
+                  <Controller name="reviewComments" control={control} rules={{ required: t('admin.reviewCommentsRequired') }} render={({ field }) => (<textarea {...field} rows={4} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none" placeholder={t('admin.provideFeedback')} />)} />
                   {errors.reviewComments && (<p className="mt-2 text-sm text-red-400">{errors.reviewComments.message}</p>)}
                 </div>
                 <div className="flex gap-4">
-                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setReviewDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
-                  <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} disabled={reviewApplicationMutation.isPending} className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed">{reviewApplicationMutation.isPending ? 'Reviewing...' : 'Submit Review'}</motion.button>
+                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setReviewDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">{t('admin.cancel')}</motion.button>
+                  <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} disabled={reviewApplicationMutation.isPending} className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed">{reviewApplicationMutation.isPending ? t('admin.reviewing') : t('admin.submitReview')}</motion.button>
                 </div>
               </form>
             </motion.div>

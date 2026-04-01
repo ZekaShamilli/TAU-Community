@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import apiClient from '../../lib/api';
 
 // Real stats service using API
@@ -38,6 +39,7 @@ interface DashboardStats {
 }
 
 const SystemStats: React.FC = () => {
+  const { t } = useTranslation();
   const {
     data: stats,
     isLoading,
@@ -117,28 +119,28 @@ const SystemStats: React.FC = () => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Clubs"
+          title={t('admin.totalClubs')}
           value={stats.totalClubs}
           icon={'\u{1F3E2}'}
           color="text-[var(--accent)]"
           gradient="text-[var(--accent)]"
         />
         <StatCard
-          title="Total Activities"
+          title={t('admin.totalActivities')}
           value={stats.totalActivities}
           icon={'\u{1F4C5}'}
           color="text-green-400"
           gradient="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
         />
         <StatCard
-          title="Total Applications"
+          title={t('admin.totalApplications')}
           value={stats.totalApplications}
           icon={'\u{1F4DD}'}
           color="text-yellow-400"
           gradient="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600"
         />
         <StatCard
-          title="Total Users"
+          title={t('admin.totalUsers')}
           value={stats.totalUsers}
           icon={'\u{1F465}'}
           color="text-purple-400"
@@ -159,7 +161,7 @@ const SystemStats: React.FC = () => {
             Upcoming Activities
           </h3>
           {stats.recentActivities.length === 0 ? (
-            <p className="text-text-tertiary">No upcoming activities</p>
+            <p className="text-text-tertiary">{t('admin.noUpcomingActivities')}</p>
           ) : (
             <div className="space-y-3">
               {stats.recentActivities.map((activity) => (
@@ -192,7 +194,7 @@ const SystemStats: React.FC = () => {
             Pending Applications
           </h3>
           {stats.pendingApplications.length === 0 ? (
-            <p className="text-text-tertiary">No pending applications</p>
+            <p className="text-text-tertiary">{t('admin.noPendingApplications')}</p>
           ) : (
             <div className="space-y-3">
               {stats.pendingApplications.map((application) => (
@@ -227,7 +229,7 @@ const SystemStats: React.FC = () => {
           {stats.flaggedContent.length === 0 ? (
             <div className="flex items-center gap-2">
               <span className="text-2xl">{'\u2705'}</span>
-              <p className="text-green-400">No flagged content</p>
+              <p className="text-green-400">{t('admin.noFlaggedContent')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -263,21 +265,21 @@ const SystemStats: React.FC = () => {
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div>
-            <p className="text-text-tertiary mb-2">Database Connection</p>
+            <p className="text-text-tertiary mb-2">{t('admin.dbConnection')}</p>
             <div className="flex items-center gap-2">
               <span className="text-xl">{'\u2705'}</span>
-              <p className="text-green-400 font-semibold">Healthy</p>
+              <p className="text-green-400 font-semibold">{t('admin.healthy')}</p>
             </div>
           </div>
           <div>
-            <p className="text-text-tertiary mb-2">API Response Time</p>
+            <p className="text-text-tertiary mb-2">{t('admin.apiResponseTime')}</p>
             <div className="flex items-center gap-2">
               <span className="text-xl">{'\u2705'}</span>
               <p className="text-green-400 font-semibold">&lt; 200ms</p>
             </div>
           </div>
           <div>
-            <p className="text-text-tertiary mb-2">Cache Hit Rate</p>
+            <p className="text-text-tertiary mb-2">{t('admin.cacheHitRate')}</p>
             <div>
               <div className="w-full bg-[var(--bg-subtle)] rounded-full h-2 mb-2">
                 <div className="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
@@ -286,7 +288,7 @@ const SystemStats: React.FC = () => {
             </div>
           </div>
           <div>
-            <p className="text-text-tertiary mb-2">Active Sessions</p>
+            <p className="text-text-tertiary mb-2">{t('admin.activeSessions')}</p>
             <p className="text-3xl font-bold text-[var(--accent)]">23</p>
           </div>
         </div>
