@@ -46,7 +46,6 @@ const cardVariant = {
 
 const CYCLING_PHRASES = [
   'Student Clubs',
-  'Campus Activities',
   'New Friendships',
   'Your Community',
 ];
