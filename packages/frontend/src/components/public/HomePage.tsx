@@ -257,7 +257,7 @@ const HOW_STEPS = [
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { setMode } = useThemeMode();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -653,7 +653,7 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* ── How It Works ── */}
-        {!isAuthenticated && <section className="mt-24">
+        {!isAuthenticated && !isLoading && <section className="mt-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
