@@ -44,11 +44,6 @@ const cardVariant = {
   }),
 };
 
-const CYCLING_PHRASES = [
-  'Student Clubs',
-  'New Friendships',
-  'Your Community',
-];
 
 /* ─── Count-up hook ─── */
 function useCountUp(end: number, duration = 1800, enabled = true) {
@@ -259,6 +254,13 @@ const HomePage: React.FC = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
 
+  const CYCLING_PHRASES = useMemo(() => [
+    t('home.phrase1'),
+    t('home.phrase2'),
+    t('home.phrase3'),
+    t('home.phrase4'),
+  ], [t]);
+
   const HOW_STEPS = useMemo(() => [
     { num: '01', icon: '🎓', title: t('home.step1Title'), desc: t('home.step1Desc') },
     { num: '02', icon: '🏛️', title: t('home.step2Title'), desc: t('home.step2Desc') },
@@ -351,11 +353,11 @@ const HomePage: React.FC = () => {
     navigate(`/kulup/${club.urlSlug}`);
   }, [getClubButtonConfig, navigate, isAuthenticated, t]);
 
-  const marqueeItems = [
-    '🎓 Academic Clubs', '🎨 Art & Design', '⚽ Sports Teams', '🎵 Music & Culture',
-    '💻 Tech & Coding', '🌍 Social Impact', '🔬 Science Society', '📚 Book Club',
-    '🎭 Drama & Theatre', '🏋️ Fitness & Wellness', '🌱 Environment', '🎮 Gaming',
-  ];
+  const marqueeItems = useMemo(() => [
+    `🎓 ${t('home.marquee1')}`, `🎨 ${t('home.marquee2')}`, `⚽ ${t('home.marquee3')}`, `🎵 ${t('home.marquee4')}`,
+    `💻 ${t('home.marquee5')}`, `🌍 ${t('home.marquee6')}`, `🔬 ${t('home.marquee7')}`, `📚 ${t('home.marquee8')}`,
+    `🎭 ${t('home.marquee9')}`, `🏋️ ${t('home.marquee10')}`, `🌱 ${t('home.marquee11')}`, `🎮 ${t('home.marquee12')}`,
+  ], [t]);
 
   return (
     <div className="relative min-h-screen overflow-x-clip clean-shell animated-gradient-bg">
@@ -608,20 +610,6 @@ const HomePage: React.FC = () => {
               </motion.div>
             )}
 
-            {/* Scroll hint */}
-            <motion.div
-              variants={fadeUp}
-              custom={5}
-              className="mt-4 flex flex-col items-center gap-1"
-            >
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                className="flex h-8 w-5 items-start justify-center rounded-full border-2 border-[var(--border-strong)] pt-1.5"
-              >
-                <div className="h-1.5 w-1 rounded-full bg-[var(--text-tertiary)]" />
-              </motion.div>
-            </motion.div>
           </motion.div>
         </motion.section>
 
