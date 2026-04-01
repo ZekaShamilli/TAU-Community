@@ -539,7 +539,7 @@ const HomePage: React.FC = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                 </span>
-                TAU University · Official Platform
+                TAU University
               </span>
             </motion.div>
 
@@ -840,7 +840,6 @@ const HomePage: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-2 text-sm text-red-100 font-medium">
                   <span className="flex items-center gap-1.5">✅ {t('home.trustFree')}</span>
                   <span className="flex items-center gap-1.5">✅ {t('home.trustNoSpam')}</span>
-                  <span className="flex items-center gap-1.5">✅ {t('home.trustOfficial')}</span>
                 </div>
               </div>
             </div>
