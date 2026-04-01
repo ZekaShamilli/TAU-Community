@@ -82,7 +82,7 @@ const ApplicationManagement: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="flex justify-center p-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div></div>;
+    return <div className="flex justify-center p-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div></div>;
   }
 
   if (error) {
@@ -99,7 +99,7 @@ const ApplicationManagement: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--border)]">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Student</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Club</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
@@ -111,7 +111,7 @@ const ApplicationManagement: React.FC = () => {
             <tbody>
               <AnimatePresence>
                 {applications.map((application: Application, index: number) => (
-                  <motion.tr key={application.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: index * 0.05 }} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                  <motion.tr key={application.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: index * 0.05 }} className="border-b border-[var(--border)] hover:bg-[var(--bg-subtle)] transition-colors">
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-text-primary">{application.student?.firstName} {application.student?.lastName}</p>
@@ -128,7 +128,7 @@ const ApplicationManagement: React.FC = () => {
                           whileHover={{ scale: 1.1 }} 
                           whileTap={{ scale: 0.9 }} 
                           onClick={() => setMenuApplicationId(menuApplicationId === application.id ? null : application.id)} 
-                          className="p-2 rounded-lg bg-dark-800/50 border border-neon-blue/30 hover:border-neon-blue/60 hover:shadow-lg hover:shadow-neon-blue/30 transition-all text-neon-blue"
+                          className="p-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] hover:border-[var(--accent)] hover:shadow-soft transition-all text-[var(--accent)]"
                         >
                           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -136,24 +136,24 @@ const ApplicationManagement: React.FC = () => {
                         </motion.button>
                         <AnimatePresence>
                           {menuApplicationId === application.id && (
-                            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute right-0 mt-2 w-48 bg-dark-800 rounded-lg overflow-hidden shadow-xl z-50">
-                              <button onClick={() => { setSelectedApplication(application); setViewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left text-text-secondary hover:bg-dark-700 transition-colors flex items-center gap-3">
+                            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="absolute right-0 mt-2 w-48 bg-[var(--bg-elevated)] border border-[var(--border-strong)] rounded-lg overflow-hidden shadow-float z-50">
+                              <button onClick={() => { setSelectedApplication(application); setViewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left text-text-secondary hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                 View Details
                               </button>
                               {application.status === 'PENDING' && (
                                 <>
-                                  <button onClick={() => { setSelectedApplication(application); setValue('status', 'APPROVED'); setValue('reviewComments', ''); setReviewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-dark-700 transition-colors flex items-center gap-3 text-green-400">
+                                  <button onClick={() => { setSelectedApplication(application); setValue('status', 'APPROVED'); setValue('reviewComments', ''); setReviewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-green-600">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                     Approve
                                   </button>
-                                  <button onClick={() => { setSelectedApplication(application); setValue('status', 'REJECTED'); setValue('reviewComments', ''); setReviewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-dark-700 transition-colors flex items-center gap-3 text-red-400">
+                                  <button onClick={() => { setSelectedApplication(application); setValue('status', 'REJECTED'); setValue('reviewComments', ''); setReviewDialogOpen(true); setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-red-600">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                     Reject
                                   </button>
                                 </>
                               )}
-                              <button onClick={() => { if (window.confirm(`Are you sure you want to delete this application?`)) { deleteApplicationMutation.mutate(application.id); } setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-dark-700 text-red-400 transition-colors flex items-center gap-3">
+                              <button onClick={() => { if (window.confirm(`Are you sure you want to delete this application?`)) { deleteApplicationMutation.mutate(application.id); } setMenuApplicationId(null); }} className="w-full px-4 py-3 text-left hover:bg-red-50 text-red-600 transition-colors flex items-center gap-3">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                                 Delete
                               </button>
@@ -197,11 +197,11 @@ const ApplicationManagement: React.FC = () => {
               <form onSubmit={handleSubmit((data) => selectedApplication && reviewApplicationMutation.mutate({ id: selectedApplication.id, data }))} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">Review Comments *</label>
-                  <Controller name="reviewComments" control={control} rules={{ required: 'Review comments are required' }} render={({ field }) => (<textarea {...field} rows={4} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors resize-none" placeholder="Provide feedback for the applicant..." />)} />
+                  <Controller name="reviewComments" control={control} rules={{ required: 'Review comments are required' }} render={({ field }) => (<textarea {...field} rows={4} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none" placeholder="Provide feedback for the applicant..." />)} />
                   {errors.reviewComments && (<p className="mt-2 text-sm text-red-400">{errors.reviewComments.message}</p>)}
                 </div>
                 <div className="flex gap-4">
-                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setReviewDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors">Cancel</motion.button>
+                  <motion.button type="button" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setReviewDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
                   <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} disabled={reviewApplicationMutation.isPending} className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed">{reviewApplicationMutation.isPending ? 'Reviewing...' : 'Submit Review'}</motion.button>
                 </div>
               </form>

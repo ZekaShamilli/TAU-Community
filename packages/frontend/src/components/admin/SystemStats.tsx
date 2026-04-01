@@ -50,7 +50,7 @@ const SystemStats: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div>
       </div>
     );
   }
@@ -74,7 +74,7 @@ const SystemStats: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-6 border-blue-500/50"
       >
-        <p className="text-blue-400">No statistics available at this time.</p>
+        <p className="text-[var(--accent)]">No statistics available at this time.</p>
       </motion.div>
     );
   }
@@ -90,7 +90,7 @@ const SystemStats: React.FC = () => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.05 }}
-      className="glass-card p-6 hover:border-neon-blue/50 transition-all"
+      className="glass-card p-6 hover:border-[var(--accent)] transition-all"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -120,8 +120,8 @@ const SystemStats: React.FC = () => {
           title="Total Clubs"
           value={stats.totalClubs}
           icon={'\u{1F3E2}'}
-          color="text-blue-400"
-          gradient="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"
+          color="text-[var(--accent)]"
+          gradient="text-[var(--accent)]"
         />
         <StatCard
           title="Total Activities"
@@ -163,7 +163,7 @@ const SystemStats: React.FC = () => {
           ) : (
             <div className="space-y-3">
               {stats.recentActivities.map((activity) => (
-                <div key={activity.id} className="p-3 bg-white/5 rounded-lg border border-white/10 hover:border-neon-blue/50 transition-colors">
+                <div key={activity.id} className="p-3 bg-[var(--bg-subtle)] rounded-lg border border-[var(--border)] hover:border-[var(--accent)] transition-colors">
                   <div className="flex items-start gap-3">
                     <span className="text-xl">{'\u{23F0}'}</span>
                     <div className="flex-1">
@@ -196,7 +196,7 @@ const SystemStats: React.FC = () => {
           ) : (
             <div className="space-y-3">
               {stats.pendingApplications.map((application) => (
-                <div key={application.id} className="p-3 bg-white/5 rounded-lg border border-white/10 hover:border-yellow-500/50 transition-colors">
+                <div key={application.id} className="p-3 bg-[var(--bg-subtle)] rounded-lg border border-[var(--border)] hover:border-amber-400 transition-colors">
                   <div className="flex items-start gap-3">
                     <span className="text-xl">{'\u26A0\uFE0F'}</span>
                     <div className="flex-1">
@@ -232,7 +232,7 @@ const SystemStats: React.FC = () => {
           ) : (
             <div className="space-y-3">
               {stats.flaggedContent.map((content) => (
-                <div key={content.id} className="p-3 bg-white/5 rounded-lg border border-white/10 hover:border-red-500/50 transition-colors">
+                <div key={content.id} className="p-3 bg-[var(--bg-subtle)] rounded-lg border border-[var(--border)] hover:border-red-400 transition-colors">
                   <div className="flex items-start gap-3">
                     <span className="text-xl">{'\u26A0\uFE0F'}</span>
                     <div className="flex-1">
@@ -279,7 +279,7 @@ const SystemStats: React.FC = () => {
           <div>
             <p className="text-text-tertiary mb-2">Cache Hit Rate</p>
             <div>
-              <div className="w-full bg-dark-700 rounded-full h-2 mb-2">
+              <div className="w-full bg-[var(--bg-subtle)] rounded-full h-2 mb-2">
                 <div className="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
               </div>
               <p className="text-green-400 font-semibold">85%</p>
@@ -287,7 +287,7 @@ const SystemStats: React.FC = () => {
           </div>
           <div>
             <p className="text-text-tertiary mb-2">Active Sessions</p>
-            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple">23</p>
+            <p className="text-3xl font-bold text-[var(--accent)]">23</p>
           </div>
         </div>
       </motion.div>

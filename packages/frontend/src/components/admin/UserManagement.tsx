@@ -120,8 +120,8 @@ const UserManagement: React.FC = () => {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'SUPER_ADMIN': return 'bg-red-500/20 text-red-400 border-red-500/50';
-      case 'CLUB_PRESIDENT': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
+      case 'SUPER_ADMIN': return 'bg-red-50 text-red-700 border-red-200';
+      case 'CLUB_PRESIDENT': return 'bg-amber-50 text-amber-700 border-amber-200';
       case 'STUDENT': return 'bg-blue-500/20 text-blue-400 border-blue-500/50';
       default: return 'bg-gray-500/20 text-text-tertiary border-gray-500/50';
     }
@@ -188,14 +188,14 @@ const UserManagement: React.FC = () => {
                 const isAward = tx.transactionType === 'AWARD';
                 
                 return (
-                  <div key={tx.id} className="glass-card p-4 hover:bg-white/5 transition-colors">
+                  <div key={tx.id} className="glass-card p-4 hover:bg-[var(--bg-subtle)] transition-colors">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                            isBonus ? 'bg-green-500/20 text-green-400' :
-                            isPenalty ? 'bg-red-500/20 text-red-400' :
-                            'bg-blue-500/20 text-blue-400'
+                            isBonus ? 'bg-green-50 text-green-700' :
+                            isPenalty ? 'bg-red-50 text-red-700' :
+                            'bg-blue-50 text-blue-700'
                           }`}>
                             {tx.transactionType}
                           </span>
@@ -208,7 +208,7 @@ const UserManagement: React.FC = () => {
                         <p className="text-sm text-text-tertiary">{tx.reason}</p>
                         {tx.clubName && (
                           <p className="text-xs text-text-tertiary mt-1">
-                            <span className="text-neon-purple">Club:</span> {tx.clubName}
+                            <span className="text-[var(--text-secondary)]">Club:</span> {tx.clubName}
                           </p>
                         )}
                       </div>
@@ -240,11 +240,11 @@ const UserManagement: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2">Search</label>
-            <input type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} placeholder="Search users..." className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors" />
+            <input type="text" value={search} onChange={(e) => { setSearch(e.target.value); setPage(0); }} placeholder="Search users..." className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors" />
           </div>
           <div>
             <label className="block text-sm font-medium text-text-secondary mb-2">Filter by Role</label>
-            <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors">
+            <select value={roleFilter} onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors">
               <option value="">All Roles</option>
               <option value="SUPER_ADMIN">Super Admin</option>
               <option value="CLUB_PRESIDENT">Club President</option>
@@ -257,13 +257,13 @@ const UserManagement: React.FC = () => {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card overflow-hidden">
         {isLoading ? (
-          <div className="flex justify-center items-center p-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div></div>
+          <div className="flex justify-center items-center p-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div></div>
         ) : (
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-white/10">
+                  <tr className="border-b border-[var(--border)]">
                     <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Name</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Email</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Role</th>
@@ -278,7 +278,7 @@ const UserManagement: React.FC = () => {
                     {filteredUsers.map((user: any, index: number) => {
                       const userCoins = coinBalances?.[user.id] || { balance: 0 };
                       return (
-                        <motion.tr key={user.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: index * 0.05 }} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                        <motion.tr key={user.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ delay: index * 0.05 }} className="border-b border-[var(--border)] hover:bg-[var(--bg-subtle)] transition-colors">
                           <td className="px-6 py-4"><p className="font-medium text-text-primary">{user.firstName} {user.lastName}</p></td>
                           <td className="px-6 py-4 text-text-secondary">{user.email}</td>
                           <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border whitespace-nowrap ${getRoleColor(user.role)}`}>{getRoleLabel(user.role)}</span></td>
@@ -288,14 +288,14 @@ const UserManagement: React.FC = () => {
                               <span>{userCoins.balance}</span>
                             </span>
                           </td>
-                          <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${user.isActive ? 'bg-green-500/20 text-green-400 border-green-500/50' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{user.isActive ? 'Active' : 'Inactive'}</span></td>
+                          <td className="px-6 py-4"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${user.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{user.isActive ? 'Active' : 'Inactive'}</span></td>
                           <td className="px-6 py-4 text-text-secondary">{new Date(user.createdAt).toLocaleDateString()}</td>
                           <td className="px-6 py-4">
                             <div className="flex gap-2">
                               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setUserToAdjust(user); setAdjustCoinsDialogOpen(true); }} className="p-2 rounded-lg hover:bg-yellow-500/20 text-yellow-400 transition-colors" title="Adjust Coins">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                               </motion.button>
-                              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setSelectedUser(user); setViewDialogOpen(true); }} className="p-2 rounded-lg hover:bg-blue-500/20 text-blue-400 transition-colors">
+                              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setSelectedUser(user); setViewDialogOpen(true); }} className="p-2 rounded-lg hover:bg-[var(--accent-muted)] text-[var(--accent)] transition-colors">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                               </motion.button>
                               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setUserToDelete(user); setDeleteDialogOpen(true); }} className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors">
@@ -310,11 +310,11 @@ const UserManagement: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border)]">
               <p className="text-text-tertiary text-sm">Showing {page * rowsPerPage + 1} to {Math.min((page + 1) * rowsPerPage, users.length)} of {users.length} users</p>
               <div className="flex gap-2">
-                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">Previous</motion.button>
-                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(page + 1)} disabled={(page + 1) * rowsPerPage >= users.length} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/10 transition-colors">Next</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className="px-4 py-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--bg-panel)] transition-colors">Previous</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setPage(page + 1)} disabled={(page + 1) * rowsPerPage >= users.length} className="px-4 py-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] text-text-primary disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--bg-panel)] transition-colors">Next</motion.button>
               </div>
             </div>
           </>
@@ -327,23 +327,23 @@ const UserManagement: React.FC = () => {
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <h3 className="text-2xl font-bold neon-text mb-6">User Details</h3>
               {isLoadingDetails ? (
-                <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div></div>
+                <div className="flex justify-center py-8"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div></div>
               ) : (
                 <div className="space-y-6">
                   <div><h4 className="text-xl font-bold text-text-primary">{selectedUser.firstName} {selectedUser.lastName}</h4><p className="text-text-tertiary">{selectedUser.email}</p></div>
                   <div className="grid grid-cols-2 gap-6">
                     <div><p className="text-sm text-text-tertiary mb-2">Role</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getRoleColor(selectedUser.role)}`}>{getRoleLabel(selectedUser.role)}</span></div>
-                    <div><p className="text-sm text-text-tertiary mb-2">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.isActive ? 'bg-green-500/20 text-green-400 border-green-500/50' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{selectedUser.isActive ? 'Active' : 'Inactive'}</span></div>
+                    <div><p className="text-sm text-text-tertiary mb-2">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{selectedUser.isActive ? 'Active' : 'Inactive'}</span></div>
                   </div>
                   <div><p className="text-sm text-text-tertiary mb-2">Joined</p><p className="text-text-primary">{new Date(selectedUser.createdAt).toLocaleDateString()}</p></div>
-                  <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-white/10 pt-4">Club Memberships</h5>
+                  <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">Club Memberships</h5>
                     {userDetailsData?.clubs && userDetailsData.clubs.length > 0 ? (
-                      <div className="space-y-3">{userDetailsData.clubs.map((club: any) => (<div key={club.id} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4"><p className="font-medium text-text-primary">{club.name}</p><p className="text-sm text-text-tertiary">Role: {club.memberRole || 'Member'} {'\u2022'} Joined: {new Date(club.joinedAt).toLocaleDateString()}</p></div>))}</div>
+                      <div className="space-y-3">{userDetailsData.clubs.map((club: any) => (<div key={club.id} className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4"><p className="font-medium text-text-primary">{club.name}</p><p className="text-sm text-text-tertiary">Role: {club.memberRole || 'Member'} {'\u2022'} Joined: {new Date(club.joinedAt).toLocaleDateString()}</p></div>))}</div>
                     ) : (<p className="text-text-tertiary">Not a member of any clubs</p>)}
                   </div>
                   {userDetailsData?.applications && userDetailsData.applications.length > 0 && (
-                    <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-white/10 pt-4">Club Applications</h5>
-                      <div className="space-y-3">{userDetailsData.applications.map((app: any) => (<div key={app.id} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4"><p className="font-medium text-text-primary">{app.clubName}</p><div className="flex items-center gap-2 mt-2"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${app.status === 'APPROVED' ? 'bg-green-500/20 text-green-400 border-green-500/50' : app.status === 'REJECTED' ? 'bg-red-500/20 text-red-400 border-red-500/50' : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50'}`}>{app.status}</span><span className="text-sm text-text-tertiary">Applied: {new Date(app.createdAt).toLocaleDateString()}</span></div></div>))}</div>
+                    <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">Club Applications</h5>
+                      <div className="space-y-3">{userDetailsData.applications.map((app: any) => (<div key={app.id} className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4"><p className="font-medium text-text-primary">{app.clubName}</p><div className="flex items-center gap-2 mt-2"><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${app.status === 'APPROVED' ? 'bg-green-50 text-green-700 border-green-200' : app.status === 'REJECTED' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>{app.status}</span><span className="text-sm text-text-tertiary">Applied: {new Date(app.createdAt).toLocaleDateString()}</span></div></div>))}</div>
                     </div>
                   )}
                 </div>
@@ -362,7 +362,7 @@ const UserManagement: React.FC = () => {
               <p className="text-text-secondary mb-2">Are you sure you want to delete user <strong className="text-text-primary">{userToDelete.firstName} {userToDelete.lastName}</strong>?</p>
               <p className="text-text-tertiary text-sm mb-6">This action cannot be undone.</p>
               <div className="flex gap-4">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDeleteDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors">Cancel</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDeleteDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => userToDelete && deleteUserMutation.mutate(userToDelete.id)} disabled={deleteUserMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-red-500 text-text-primary font-semibold hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{deleteUserMutation.isPending ? 'Deleting...' : 'Delete'}</motion.button>
               </div>
             </motion.div>
@@ -382,14 +382,14 @@ const UserManagement: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-text-secondary mb-2">Amount (use negative to remove)</label>
-                <input type="number" value={coinAmount} onChange={(e) => setCoinAmount(e.target.value)} placeholder="e.g., 10 or -5" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-yellow-500 transition-colors" />
+                <input type="number" value={coinAmount} onChange={(e) => setCoinAmount(e.target.value)} placeholder="e.g., 10 or -5" className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors" />
               </div>
               <div className="mb-6">
                 <label className="block text-sm font-medium text-text-secondary mb-2">Reason</label>
-                <textarea value={coinReason} onChange={(e) => setCoinReason(e.target.value)} placeholder="e.g., Admin adjustment" rows={3} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-yellow-500 transition-colors resize-none" />
+                <textarea value={coinReason} onChange={(e) => setCoinReason(e.target.value)} placeholder="e.g., Admin adjustment" rows={3} className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-amber-500 transition-colors resize-none" />
               </div>
               <div className="flex gap-4">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setAdjustCoinsDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors">Cancel</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setAdjustCoinsDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Cancel</motion.button>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAdjustCoins} disabled={adjustCoinsMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">{adjustCoinsMutation.isPending ? 'Adjusting...' : 'Adjust Coins'}</motion.button>
               </div>
             </motion.div>
