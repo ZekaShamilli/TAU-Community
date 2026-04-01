@@ -67,7 +67,7 @@ export const applicationService = {
     exists: boolean;
     application?: Application;
   }> {
-    const response = await apiClient.get(`/applications/check?clubId=${clubId}&email=${encodeURIComponent(email)}`);
+    const response = await apiClient.get(`/applications/check/${clubId}/${encodeURIComponent(email)}`);
     return response.data;
   }
 };
