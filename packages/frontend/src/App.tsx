@@ -21,6 +21,7 @@ import { NotificationProvider } from './components/common/NotificationSystem';
 // Public components
 import HomePage from './components/public/HomePage';
 import ClubPage from './components/public/ClubPage';
+import ClubsPage from './components/public/ClubsPage';
 import NotFoundPage from './components/public/NotFoundPage';
 
 // Student components
@@ -41,6 +42,7 @@ function App() {
             <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
+            <Route path="/clubs" element={<ClubsPage />} />
             <Route path="/kulup/:clubSlug" element={<ClubPage />} />
             
             {/* Student Routes */}

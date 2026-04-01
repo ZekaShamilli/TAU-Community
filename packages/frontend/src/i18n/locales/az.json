@@ -251,7 +251,10 @@
     "switchToAzerbaijani": "Azərbaycanca",
     "switchToEnglish": "İngiliscə",
     "lightMode": "İşıqlı rejim",
-    "darkMode": "Qaranlıq rejim"
+    "darkMode": "Qaranlıq rejim",
+    "clearSearch": "Axtarışı təmizlə",
+    "filterAll": "Hamısı",
+    "filterActive": "Aktiv"
   },
   "gpa": {
     "label": "GPA (0.00 - 4.00)",

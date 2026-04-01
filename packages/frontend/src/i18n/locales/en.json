@@ -251,7 +251,10 @@
     "switchToAzerbaijani": "Switch to Azerbaijani",
     "switchToEnglish": "Switch to English",
     "lightMode": "Light mode",
-    "darkMode": "Dark mode"
+    "darkMode": "Dark mode",
+    "clearSearch": "Clear search",
+    "filterAll": "All",
+    "filterActive": "Active"
   },
   "gpa": {
     "label": "GPA (0.00 - 4.00)",
