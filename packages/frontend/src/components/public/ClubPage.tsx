@@ -408,6 +408,20 @@ const ClubPage: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-3 gap-8 items-center">
             <div className="md:col-span-2">
+              {club.logoUrl && (
+                <motion.div
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.25 }}
+                  className="mb-5"
+                >
+                  <img
+                    src={club.logoUrl}
+                    alt={`${club.name} logo`}
+                    className="w-20 h-20 rounded-2xl object-cover border-2 border-white/20 shadow-lg"
+                  />
+                </motion.div>
+              )}
               <motion.h1
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}

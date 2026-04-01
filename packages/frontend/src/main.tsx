@@ -31,18 +31,85 @@ const AppProviders: React.FC = () => {
         palette: {
           mode,
           primary: {
-            main: mode === 'dark' ? '#6ee7ff' : '#0b75b6',
+            main: mode === 'dark' ? '#ef4444' : '#dc2626',
+            light: mode === 'dark' ? '#f87171' : '#ef4444',
+            dark: mode === 'dark' ? '#dc2626' : '#b91c1c',
+            contrastText: '#ffffff',
           },
           secondary: {
-            main: mode === 'dark' ? '#5eead4' : '#0f766e',
+            main: mode === 'dark' ? '#fca5a5' : '#b91c1c',
+            contrastText: '#ffffff',
+          },
+          error: {
+            main: '#dc2626',
           },
           background: {
-            default: mode === 'dark' ? '#0a1222' : '#f6fbff',
-            paper: mode === 'dark' ? '#121d34' : '#ffffff',
+            default: mode === 'dark' ? '#1a1a1a' : '#ffffff',
+            paper: mode === 'dark' ? '#242424' : '#ffffff',
           },
+          text: {
+            primary: mode === 'dark' ? '#fafaf9' : '#1c1917',
+            secondary: mode === 'dark' ? '#a8a29e' : '#57534e',
+          },
+          divider: mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.09)',
         },
         typography: {
-          fontFamily: '"Manrope", "Inter", "Segoe UI", sans-serif',
+          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          fontWeightRegular: 400,
+          fontWeightMedium: 500,
+          fontWeightBold: 600,
+          h1: { fontWeight: 700, letterSpacing: '-0.04em' },
+          h2: { fontWeight: 600, letterSpacing: '-0.03em' },
+          h3: { fontWeight: 600, letterSpacing: '-0.03em' },
+          button: { textTransform: 'none', fontWeight: 500, letterSpacing: '-0.01em' },
+        },
+        shape: {
+          borderRadius: 10,
+        },
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 8,
+                boxShadow: 'none',
+                '&:hover': { boxShadow: 'none' },
+              },
+              contained: {
+                '&:hover': { boxShadow: 'none' },
+              },
+            },
+          },
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04)',
+                border: mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.09)',
+                borderRadius: 12,
+              },
+            },
+          },
+          MuiPaper: {
+            styleOverrides: {
+              root: {
+                boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04)',
+                borderRadius: 12,
+              },
+            },
+          },
+          MuiTextField: {
+            styleOverrides: {
+              root: {
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 10,
+                },
+              },
+            },
+          },
+          MuiChip: {
+            styleOverrides: {
+              root: { borderRadius: 6 },
+            },
+          },
         },
       }),
     [mode]

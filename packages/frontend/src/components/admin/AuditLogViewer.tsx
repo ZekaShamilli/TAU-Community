@@ -52,7 +52,7 @@ const AuditLogViewer: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div>
       </div>
     );
   }
@@ -85,7 +85,7 @@ const AuditLogViewer: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setFilterOpen(!filterOpen)}
-          className="px-4 py-2 rounded-lg bg-dark-800/50 border border-neon-blue/30 hover:border-neon-blue/60 text-text-primary transition-all flex items-center gap-2"
+          className="px-4 py-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] hover:border-[var(--accent)] text-text-primary transition-all flex items-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -102,7 +102,7 @@ const AuditLogViewer: React.FC = () => {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors [&>option]:bg-dark-800 [&>option]:text-text-primary"
+                className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors [&>option]:bg-[var(--bg-elevated)] [&>option]:text-text-primary"
               >
                 <option value="">All Roles</option>
                 <option value="SUPER_ADMIN">Super Admin</option>
@@ -115,7 +115,7 @@ const AuditLogViewer: React.FC = () => {
               <select
                 value={resourceFilter}
                 onChange={(e) => setResourceFilter(e.target.value)}
-                className="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors [&>option]:bg-dark-800 [&>option]:text-text-primary"
+                className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors [&>option]:bg-[var(--bg-elevated)] [&>option]:text-text-primary"
               >
                 <option value="">All Resources</option>
                 <option value="CLUB">Club</option>
@@ -134,7 +134,7 @@ const AuditLogViewer: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full table-fixed">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--border)]">
                 <th className="w-[140px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Timestamp</th>
                 <th className="w-[200px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">User</th>
                 <th className="w-[120px] px-6 py-4 text-left text-sm font-semibold text-text-secondary">Role</th>
@@ -154,7 +154,7 @@ const AuditLogViewer: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.05 }}
-                    className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    className="border-b border-[var(--border)] hover:bg-[var(--bg-subtle)] transition-colors"
                   >
                     <td className="px-6 py-4 text-text-secondary text-sm whitespace-nowrap">
                       {new Date(entry.timestamp).toLocaleString()}
@@ -201,7 +201,7 @@ const AuditLogViewer: React.FC = () => {
                           setSelectedEntry(entry);
                           setDetailDialogOpen(true);
                         }}
-                        className="p-2 rounded-lg hover:bg-blue-500/20 text-blue-400 transition-colors"
+                        className="p-2 rounded-lg hover:bg-[var(--accent-muted)] text-[var(--accent)] transition-colors"
                         title="View Details"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -278,14 +278,14 @@ const AuditLogViewer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm text-text-secondary mb-1">User Agent</p>
-                  <p className="text-text-primary font-mono text-xs bg-white/5 p-3 rounded-lg break-all">
+                  <p className="text-text-primary font-mono text-xs bg-[var(--bg-subtle)] p-3 rounded-lg break-all">
                     {selectedEntry.userAgent}
                   </p>
                 </div>
                 {selectedEntry.changes && (
                   <div>
                     <p className="text-sm text-text-secondary mb-1">Changes</p>
-                    <pre className="text-text-primary font-mono text-xs bg-white/5 p-3 rounded-lg overflow-auto">
+                    <pre className="text-text-primary font-mono text-xs bg-[var(--bg-subtle)] p-3 rounded-lg overflow-auto">
                       {JSON.stringify(selectedEntry.changes, null, 2)}
                     </pre>
                   </div>

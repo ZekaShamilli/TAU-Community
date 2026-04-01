@@ -266,7 +266,7 @@ const ClubManagement: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div>
       </div>
     );
   }
@@ -322,8 +322,8 @@ const ClubManagement: React.FC = () => {
             onClick={() => setActiveTab('active')}
             className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
               activeTab === 'active'
-                ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-text-primary'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-white/5'
+                ? 'bg-[var(--accent)] text-white'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
             }`}
           >
             Active Clubs
@@ -332,8 +332,8 @@ const ClubManagement: React.FC = () => {
             onClick={() => setActiveTab('archived')}
             className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
               activeTab === 'archived'
-                ? 'bg-gradient-to-r from-neon-blue to-neon-purple text-text-primary'
-                : 'text-text-tertiary hover:text-text-primary hover:bg-white/5'
+                ? 'bg-[var(--accent)] text-white'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-subtle)]'
             }`}
           >
             Archived Clubs
@@ -351,7 +351,7 @@ const ClubManagement: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-[var(--border)]">
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Club Name</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">President</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
@@ -370,7 +370,7 @@ const ClubManagement: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.05 }}
-                    className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                    className="border-b border-[var(--border)] hover:bg-[var(--bg-subtle)] transition-colors"
                   >
                     <td className="px-6 py-4">
                       <div>
@@ -398,12 +398,12 @@ const ClubManagement: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/50">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-strong)]">
                         {club.activities_count || 0}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/50">
+                      <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--bg-subtle)] text-[var(--text-secondary)] border border-[var(--border-strong)]">
                         {club.applications_count || 0}
                       </span>
                     </td>
@@ -416,9 +416,9 @@ const ClubManagement: React.FC = () => {
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => setMenuClubId(menuClubId === club.id ? null : club.id)}
-                          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-neon-blue/50 transition-all"
+                          className="p-2 rounded-lg bg-[var(--bg-subtle)] hover:bg-[var(--bg-panel)] border border-[var(--border)] hover:border-[var(--accent)] transition-all"
                         >
-                          <svg className="w-5 h-5 text-neon-blue" fill="currentColor" viewBox="0 0 20 20">
+                          <svg className="w-5 h-5 text-[var(--accent)]" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                           </svg>
                         </motion.button>
@@ -429,13 +429,13 @@ const ClubManagement: React.FC = () => {
                               initial={{ opacity: 0, scale: 0.95, y: -10 }}
                               animate={{ opacity: 1, scale: 1, y: 0 }}
                               exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                              className="absolute right-0 mt-2 w-64 bg-dark-800/95 backdrop-blur-xl border-2 border-white/20 rounded-xl shadow-2xl shadow-neon-blue/20 z-50 overflow-hidden"
+                              className="absolute right-0 mt-2 w-64 bg-[var(--bg-elevated)] border border-[var(--border-strong)] rounded-xl shadow-float z-50 overflow-hidden"
                             >
                               <button
                                 onClick={() => handleViewDetails(club)}
-                                className="w-full px-5 py-3.5 text-left hover:bg-white/10 transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-white/10"
+                                className="w-full px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-[var(--border)]"
                               >
-                                <svg className="w-5 h-5 text-neon-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
@@ -446,25 +446,25 @@ const ClubManagement: React.FC = () => {
                                 <>
                                   <button
                                     onClick={() => handleEditClick(club)}
-                                    className="w-full px-5 py-3.5 text-left hover:bg-white/10 transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-white/10"
+                                    className="w-full px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-[var(--border)]"
                                   >
-                                    <svg className="w-5 h-5 text-neon-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                     Edit Club
                                   </button>
                                   <button
                                     onClick={() => handleChangePresidentClick(club)}
-                                    className="w-full px-5 py-3.5 text-left hover:bg-white/10 transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-white/10"
+                                    className="w-full px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-[var(--border)]"
                                   >
-                                    <svg className="w-5 h-5 text-neon-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                     Change President
                                   </button>
                                   <button
                                     onClick={() => handleArchiveClick(club)}
-                                    className="w-full px-5 py-3.5 text-left hover:bg-white/10 transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-white/10"
+                                    className="w-full px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-[var(--border)]"
                                   >
                                     <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
@@ -485,7 +485,7 @@ const ClubManagement: React.FC = () => {
                                 <>
                                   <button
                                     onClick={() => handleRestoreClick(club)}
-                                    className="w-full px-5 py-3.5 text-left hover:bg-white/10 transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-white/10"
+                                    className="w-full px-5 py-3.5 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-text-primary text-base font-medium border-b border-[var(--border)]"
                                   >
                                     <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -536,11 +536,11 @@ const ClubManagement: React.FC = () => {
               <h3 className="text-2xl font-bold neon-text mb-6">Create New Club</h3>
               
               {existingClubNames.length > 0 && (
-                <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-                  <p className="text-sm text-blue-300 mb-2">
+                <div className="mb-6 p-4 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl">
+                  <p className="text-sm text-[var(--text-secondary)] mb-2">
                     <strong>Existing clubs:</strong> {existingClubNames.join(', ')}
                   </p>
-                  <p className="text-sm text-blue-300">
+                  <p className="text-sm text-[var(--text-secondary)]">
                     Please choose a unique name for your new club.
                   </p>
                 </div>
@@ -559,7 +559,7 @@ const ClubManagement: React.FC = () => {
                       <input
                         {...field}
                         type="text"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
                         placeholder="Enter club name"
                       />
                     )}
@@ -581,7 +581,7 @@ const ClubManagement: React.FC = () => {
                       <textarea
                         {...field}
                         rows={4}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors resize-none"
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
                         placeholder="Enter club description"
                       />
                     )}
@@ -591,8 +591,8 @@ const ClubManagement: React.FC = () => {
                   )}
                 </div>
 
-                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-                  <p className="text-sm text-blue-300">
+                <div className="p-4 bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl">
+                  <p className="text-sm text-[var(--text-secondary)]">
                     You can assign a president to this club later using the "Change President" option in the club menu.
                   </p>
                 </div>
@@ -603,7 +603,7 @@ const ClubManagement: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setCreateDialogOpen(false)}
-                    className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                    className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                   >
                     Cancel
                   </motion.button>
@@ -727,7 +727,7 @@ const ClubManagement: React.FC = () => {
                       <input
                         {...field}
                         type="text"
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
                       />
                     )}
                   />
@@ -748,7 +748,7 @@ const ClubManagement: React.FC = () => {
                       <textarea
                         {...field}
                         rows={4}
-                        className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors resize-none"
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
                       />
                     )}
                   />
@@ -763,7 +763,7 @@ const ClubManagement: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setEditDialogOpen(false)}
-                    className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                    className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                   >
                     Cancel
                   </motion.button>
@@ -810,7 +810,7 @@ const ClubManagement: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setDeleteDialogOpen(false)}
-                  className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                  className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                 >
                   Cancel
                 </motion.button>
@@ -856,7 +856,7 @@ const ClubManagement: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setArchiveDialogOpen(false)}
-                  className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                  className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                 >
                   Cancel
                 </motion.button>
@@ -907,17 +907,17 @@ const ClubManagement: React.FC = () => {
                 
                 {isLoadingPresidents ? (
                   <div className="flex justify-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-neon-blue"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[var(--accent)]"></div>
                   </div>
                 ) : (
                   <select
                     value={selectedPresidentId}
                     onChange={(e) => setSelectedPresidentId(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
                   >
                     <option value="">No President</option>
                     {availablePresidents?.map((user: any) => (
-                      <option key={user.id} value={user.id} className="bg-dark-800">
+                      <option key={user.id} value={user.id} className="bg-[var(--bg-elevated)]">
                         {user.displayName}
                       </option>
                     ))}
@@ -930,7 +930,7 @@ const ClubManagement: React.FC = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setChangePresidentDialogOpen(false)}
-                  className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                  className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                 >
                   Cancel
                 </motion.button>

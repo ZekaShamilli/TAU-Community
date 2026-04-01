@@ -187,7 +187,7 @@ const ContentModeration: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-neon-blue"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--accent)]"></div>
       </div>
     );
   }
@@ -227,7 +227,7 @@ const ContentModeration: React.FC = () => {
             <select
               value={clubFilter}
               onChange={(e) => setClubFilter(e.target.value)}
-              className="w-full px-4 py-3 bg-dark-800 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors [&>option]:bg-dark-800 [&>option]:text-text-primary"
+              className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors [&>option]:bg-[var(--bg-elevated)] [&>option]:text-text-primary"
             >
               <option value="">All Clubs ({contentData?.activities.length || 0} activities)</option>
               {clubs.map((club) => (
@@ -254,7 +254,7 @@ const ContentModeration: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-[var(--border)]">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Type</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Title</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Description</th>
@@ -274,7 +274,7 @@ const ContentModeration: React.FC = () => {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ delay: index * 0.05 }}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                      className="border-b border-[var(--border)] hover:bg-[var(--bg-subtle)] transition-colors"
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
@@ -326,7 +326,7 @@ const ContentModeration: React.FC = () => {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setMenuContentId(menuContentId === item.id ? null : item.id)}
-                            className="p-2 rounded-lg bg-dark-800/50 border border-neon-blue/30 hover:border-neon-blue/60 hover:shadow-lg hover:shadow-neon-blue/30 transition-all text-neon-blue"
+                            className="p-2 rounded-lg bg-[var(--bg-subtle)] border border-[var(--border)] hover:border-[var(--accent)] hover:shadow-soft transition-all text-[var(--accent)]"
                           >
                             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                               <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
@@ -338,7 +338,7 @@ const ContentModeration: React.FC = () => {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                className="absolute right-0 mt-2 w-48 bg-dark-800 rounded-lg overflow-hidden shadow-xl z-50"
+                                className="absolute right-0 mt-2 w-48 bg-[var(--bg-elevated)] border border-[var(--border-strong)] rounded-lg overflow-hidden shadow-float z-50"
                               >
                                 <button
                                   onClick={() => {
@@ -346,7 +346,7 @@ const ContentModeration: React.FC = () => {
                                     setViewDialogOpen(true);
                                     setMenuContentId(null);
                                   }}
-                                  className="w-full px-4 py-3 text-left text-text-secondary hover:bg-dark-700 transition-colors flex items-center gap-3"
+                                  className="w-full px-4 py-3 text-left text-text-secondary hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3"
                                 >
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -356,7 +356,7 @@ const ContentModeration: React.FC = () => {
                                 </button>
                                 <button
                                   onClick={() => handleEdit(item)}
-                                  className="w-full px-4 py-3 text-left hover:bg-dark-700 transition-colors flex items-center gap-3 text-blue-400"
+                                  className="w-full px-4 py-3 text-left hover:bg-[var(--bg-subtle)] transition-colors flex items-center gap-3 text-[var(--accent)]"
                                 >
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -368,7 +368,7 @@ const ContentModeration: React.FC = () => {
                                     handleDelete(item);
                                     setMenuContentId(null);
                                   }}
-                                  className="w-full px-4 py-3 text-left hover:bg-dark-700 text-red-400 transition-colors flex items-center gap-3"
+                                  className="w-full px-4 py-3 text-left hover:bg-red-50 text-red-600 transition-colors flex items-center gap-3"
                                 >
                                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -423,7 +423,7 @@ const ContentModeration: React.FC = () => {
 
                 <div>
                   <p className="text-sm text-text-tertiary mb-1">Description</p>
-                  <p className="text-text-primary bg-white/5 p-4 rounded-lg">
+                  <p className="text-text-primary bg-[var(--bg-subtle)] p-4 rounded-lg">
                     {selectedContent.description || 'No description provided'}
                   </p>
                 </div>
@@ -438,7 +438,7 @@ const ContentModeration: React.FC = () => {
                 {(selectedContent.date || selectedContent.time) && (
                   <div>
                     <p className="text-sm text-text-tertiary mb-1">Activity Date & Time</p>
-                    <div className="bg-white/5 p-4 rounded-lg">
+                    <div className="bg-[var(--bg-subtle)] p-4 rounded-lg">
                       {selectedContent.date && (
                         <p className="font-medium text-text-primary">Date: {selectedContent.date}</p>
                       )}
@@ -452,7 +452,7 @@ const ContentModeration: React.FC = () => {
                 {selectedContent.author && (
                   <div>
                     <p className="text-sm text-text-tertiary mb-1">Author</p>
-                    <div className="bg-white/5 p-4 rounded-lg">
+                    <div className="bg-[var(--bg-subtle)] p-4 rounded-lg">
                       <p className="font-medium text-text-primary">
                         {selectedContent.author.firstName} {selectedContent.author.lastName}
                       </p>
@@ -508,7 +508,7 @@ const ContentModeration: React.FC = () => {
                     type="text"
                     value={editTitle}
                     onChange={(e) => setEditTitle(e.target.value)}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors"
+                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
                     placeholder="Enter title..."
                   />
                 </div>
@@ -521,7 +521,7 @@ const ContentModeration: React.FC = () => {
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     rows={4}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary placeholder-gray-500 focus:outline-none focus:border-neon-blue transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors resize-none"
                     placeholder="Enter description..."
                   />
                 </div>
@@ -535,7 +535,7 @@ const ContentModeration: React.FC = () => {
                       type="date"
                       value={editDate}
                       onChange={(e) => setEditDate(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
                     />
                   </div>
                   <div>
@@ -546,7 +546,7 @@ const ContentModeration: React.FC = () => {
                       type="time"
                       value={editTime}
                       onChange={(e) => setEditTime(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-text-primary focus:outline-none focus:border-neon-blue transition-colors"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
                     />
                   </div>
                 </div>
@@ -557,7 +557,7 @@ const ContentModeration: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setEditDialogOpen(false)}
-                    className="flex-1 px-6 py-3 rounded-xl border-2 border-white/20 text-text-primary font-semibold hover:bg-white/5 transition-colors"
+                    className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors"
                   >
                     Cancel
                   </motion.button>

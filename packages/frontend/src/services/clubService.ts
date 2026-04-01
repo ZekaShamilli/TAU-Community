@@ -95,5 +95,10 @@ export const clubService = {
 
   async removeMember(clubId: string, memberEmail: string): Promise<void> {
     await apiClient.delete(`/clubs/${clubId}/members/${encodeURIComponent(memberEmail)}`);
+  },
+
+  async uploadClubLogo(clubId: string, logoUrl: string | null): Promise<{ logoUrl: string | null }> {
+    const response = await apiClient.put(`/clubs/${clubId}/logo`, { logoUrl });
+    return response.data.data || response.data;
   }
 };
