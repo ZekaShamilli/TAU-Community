@@ -1,4 +1,4 @@
-﻿{
+{
   "nav": {
     "home": "Home",
     "news": "News",
@@ -49,7 +49,32 @@
     "dateLabel": "Date",
     "locationLabel": "Location",
     "applySignInMessage": "Please sign in to apply to clubs",
-    "students": "Students"
+    "students": "Students",
+    "dashboard": "Dashboard",
+    "gpaCalculator": "GPA Calculator",
+    "activityLabel": "Activity",
+    "howItWorks": "How It Works",
+    "howItWorksTitle": "Get started in three steps",
+    "howItWorksDesc": "Joining the TAU Community is simple, fast, and completely free.",
+    "step1Title": "Create Your Account",
+    "step1Desc": "Sign up with your TAU university credentials in under a minute.",
+    "step2Title": "Explore Clubs",
+    "step2Desc": "Browse dozens of active clubs across sports, arts, tech, culture & more.",
+    "step3Title": "Join & Earn Rewards",
+    "step3Desc": "Apply to clubs, attend activities, and earn coins for your participation.",
+    "eventsLabel": "Events",
+    "clubsLabel": "Clubs",
+    "ctaTitle": "Ready to get started?",
+    "ctaDesc": "Join thousands of TAU students exploring clubs, attending events, and building lifelong connections.",
+    "ctaButton": "Create Free Account →",
+    "ctaSecondary": "Explore Clubs",
+    "trustFree": "Free to join",
+    "trustNoSpam": "No spam",
+    "trustOfficial": "Official TAU platform",
+    "footerTagline": "Official Student Platform",
+    "floatingBadgeClubs": "Active Clubs",
+    "floatingBadgePlatform": "24/7 Platform",
+    "floatingBadgeRewards": "Earn Rewards"
   },
   "intro": {
     "subtitle": "The platform that connects student life",

@@ -1,4 +1,4 @@
-﻿{
+{
   "nav": {
     "home": "Ana səhifə",
     "news": "Xəbərlər",
@@ -49,7 +49,32 @@
     "dateLabel": "Tarix",
     "locationLabel": "Məkan",
     "applySignInMessage": "Klublara müraciət etmək üçün daxil olun",
-    "students": "Tələbə"
+    "students": "Tələbə",
+    "dashboard": "Panel",
+    "gpaCalculator": "GPA Kalkulyatoru",
+    "activityLabel": "Fəaliyyət",
+    "howItWorks": "Necə işləyir",
+    "howItWorksTitle": "Üç addımda başla",
+    "howItWorksDesc": "TAU İcmasına qoşulmaq sadə, sürətli və tamamilə pulsuzdur.",
+    "step1Title": "Hesabını yarat",
+    "step1Desc": "TAU universitetinin məlumatları ilə bir dəqiqə ərzində qeydiyyatdan keç.",
+    "step2Title": "Klubları kəşf et",
+    "step2Desc": "İdman, sənət, texnologiya, mədəniyyət və daha çox sahədə onlarla aktiv klubu nəzərdən keçir.",
+    "step3Title": "Qoşul və xal qazan",
+    "step3Desc": "Klublara müraciət et, fəaliyyətlərə qatıl və iştirakın üçün xal qazan.",
+    "eventsLabel": "Tədbirlər",
+    "clubsLabel": "Klublar",
+    "ctaTitle": "Başlamağa hazırsan?",
+    "ctaDesc": "Klubları kəşf edən, tədbirlərə qatılan və ömürlük dostluqlar quran minlərlə TAU tələbəsinə qoşul.",
+    "ctaButton": "Pulsuz hesab yarat →",
+    "ctaSecondary": "Klubları kəşf et",
+    "trustFree": "Qoşulmaq pulsuzdur",
+    "trustNoSpam": "Spam yoxdur",
+    "trustOfficial": "Rəsmi TAU platforması",
+    "footerTagline": "Rəsmi Tələbə Platforması",
+    "floatingBadgeClubs": "Aktiv Klublar",
+    "floatingBadgePlatform": "24/7 Platforma",
+    "floatingBadgeRewards": "Xal Qazan"
   },
   "intro": {
     "subtitle": "Tələbə həyatını birləşdirən platforma",

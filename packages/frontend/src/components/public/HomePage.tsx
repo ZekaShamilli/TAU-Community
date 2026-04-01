@@ -92,6 +92,7 @@ function StatCounter({ value, label, icon, delay = 0 }: { value: number; label: 
 
 /* ─── Activity card ─── */
 function ActivityCard({ activity, i, onClick }: { activity: any; i: number; onClick: () => void }) {
+  const { t } = useTranslation();
   const dateStr = useMemo(() => {
     try { return new Date(activity.startDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); }
     catch { return '-'; }
@@ -109,7 +110,7 @@ function ActivityCard({ activity, i, onClick }: { activity: any; i: number; onCl
       <div className="flex items-center gap-2.5">
         <span className="rounded-xl px-3 py-1 text-xs font-bold text-white"
           style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))' }}>
-          Activity
+          {t('home.activityLabel')}
         </span>
         {activity.club?.name && (
           <span className="text-xs text-text-tertiary font-medium truncate">{activity.club.name}</span>
@@ -246,12 +247,6 @@ const EmptyState = ({ message, error }: { message: string; error?: boolean }) =>
   </div>
 );
 
-/* ─── How It Works steps ─── */
-const HOW_STEPS = [
-  { num: '01', icon: '🎓', title: 'Create Your Account', desc: 'Sign up with your TAU university credentials in under a minute.' },
-  { num: '02', icon: '🏛️', title: 'Explore Clubs', desc: 'Browse dozens of active clubs across sports, arts, tech, culture & more.' },
-  { num: '03', icon: '⚡', title: 'Join & Earn Rewards', desc: 'Apply to clubs, attend activities, and earn coins for your participation.' },
-];
 
 /* ─── Main component ─── */
 const HomePage: React.FC = () => {
@@ -263,6 +258,12 @@ const HomePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
+
+  const HOW_STEPS = useMemo(() => [
+    { num: '01', icon: '🎓', title: t('home.step1Title'), desc: t('home.step1Desc') },
+    { num: '02', icon: '🏛️', title: t('home.step2Title'), desc: t('home.step2Desc') },
+    { num: '03', icon: '⚡', title: t('home.step3Title'), desc: t('home.step3Desc') },
+  ], [t]);
 
   const { scrollY } = useScroll();
   const heroY = useTransform(scrollY, [0, 600], [0, 70]);
@@ -443,10 +444,10 @@ const HomePage: React.FC = () => {
                           <p className="text-xs text-text-tertiary truncate">{user.email}</p>
                         </div>
                         <button onClick={handleDashboard} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-[var(--bg-subtle)] flex items-center gap-2">
-                          <span>🏠</span>{t('home.dashboard')}
+                          <span>🏠</span><span>{t('home.dashboard')}</span>
                         </button>
                         <button onClick={() => navigate('/gpa-calculator')} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-[var(--bg-subtle)] flex items-center gap-2">
-                          <span>🎓</span>{t('home.gpaCalculator')}
+                          <span>🎓</span><span>{t('home.gpaCalculator')}</span>
                         </button>
                         <div className="my-1 h-px bg-[var(--border)]" />
                         <button onClick={handleLogout} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-red-500 transition hover:bg-red-50 flex items-center gap-2">
@@ -492,7 +493,7 @@ const HomePage: React.FC = () => {
             className="floating-badge absolute -left-4 top-16 hidden xl:flex text-text-primary"
           >
             <span className="text-base">🏛️</span>
-            <span className="text-xs">{clubs.length > 0 ? `${clubs.length}+ Clubs` : 'Active Clubs'}</span>
+            <span className="text-xs">{clubs.length > 0 ? `${clubs.length}+ ${t('home.floatingBadgeClubs')}` : t('home.floatingBadgeClubs')}</span>
           </motion.div>
 
           <motion.div
@@ -501,7 +502,7 @@ const HomePage: React.FC = () => {
             className="floating-badge absolute -right-4 top-28 hidden xl:flex text-text-primary"
           >
             <span className="text-base">⚡</span>
-            <span className="text-xs">24/7 Platform</span>
+            <span className="text-xs">{t('home.floatingBadgePlatform')}</span>
           </motion.div>
 
           <motion.div
@@ -519,7 +520,7 @@ const HomePage: React.FC = () => {
             className="floating-badge absolute -right-6 bottom-24 hidden xl:flex text-text-primary"
           >
             <span className="text-base">🪙</span>
-            <span className="text-xs">Earn Rewards</span>
+            <span className="text-xs">{t('home.floatingBadgeRewards')}</span>
           </motion.div>
 
           {/* Content */}
@@ -662,13 +663,13 @@ const HomePage: React.FC = () => {
             className="mb-12 text-center"
           >
             <motion.div variants={fadeUp} custom={0} className="flex justify-center mb-4">
-              <span className="section-eyebrow">How It Works</span>
+              <span className="section-eyebrow">{t('home.howItWorks')}</span>
             </motion.div>
             <motion.h2 variants={fadeUp} custom={1} className="section-title">
-              Get started in three steps
+              {t('home.howItWorksTitle')}
             </motion.h2>
             <motion.p variants={fadeUp} custom={2} className="mt-3 text-text-secondary max-w-md mx-auto">
-              Joining the TAU Community is simple, fast, and completely free.
+              {t('home.howItWorksDesc')}
             </motion.p>
           </motion.div>
 
@@ -717,7 +718,7 @@ const HomePage: React.FC = () => {
             className="mb-10"
           >
             <motion.div variants={fadeUp} custom={0} className="flex justify-start mb-3">
-              <span className="section-eyebrow">📅 Events</span>
+              <span className="section-eyebrow">📅 {t('home.eventsLabel')}</span>
             </motion.div>
             <motion.div variants={fadeUp} custom={1} className="flex items-end justify-between gap-4">
               <div>
@@ -761,7 +762,7 @@ const HomePage: React.FC = () => {
             className="mb-10"
           >
             <motion.div variants={fadeUp} custom={0} className="flex justify-start mb-3">
-              <span className="section-eyebrow">🏛️ Clubs</span>
+              <span className="section-eyebrow">🏛️ {t('home.clubsLabel')}</span>
             </motion.div>
             <motion.div variants={fadeUp} custom={1}>
               <h2 className="section-title">{t('home.studentClubs')}</h2>
@@ -822,10 +823,10 @@ const HomePage: React.FC = () => {
                 </motion.div>
                 <div>
                   <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white">
-                    Ready to get started?
+                    {t('home.ctaTitle')}
                   </h2>
                   <p className="mt-3 text-base text-red-100 max-w-md mx-auto leading-relaxed">
-                    Join thousands of TAU students exploring clubs, attending events, and building lifelong connections.
+                    {t('home.ctaDesc')}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3">
@@ -835,23 +836,23 @@ const HomePage: React.FC = () => {
                     onClick={() => navigate('/signup')}
                     className="inline-flex items-center gap-2 rounded-2xl bg-white px-8 py-4 text-base font-bold text-[var(--accent)] shadow-lg transition hover:shadow-xl"
                   >
-                    Create Free Account →
+                    {t('home.ctaButton')}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => document.getElementById('clubs-section')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => navigate('/signup')}
                     className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/30 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                   >
-                    Explore Clubs
+                    {t('home.ctaSecondary')}
                   </motion.button>
                 </div>
 
                 {/* Trust indicators */}
                 <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 mt-2 text-sm text-red-100 font-medium">
-                  <span className="flex items-center gap-1.5">✅ Free to join</span>
-                  <span className="flex items-center gap-1.5">✅ No spam</span>
-                  <span className="flex items-center gap-1.5">✅ Official TAU platform</span>
+                  <span className="flex items-center gap-1.5">✅ {t('home.trustFree')}</span>
+                  <span className="flex items-center gap-1.5">✅ {t('home.trustNoSpam')}</span>
+                  <span className="flex items-center gap-1.5">✅ {t('home.trustOfficial')}</span>
                 </div>
               </div>
             </div>
@@ -866,10 +867,10 @@ const HomePage: React.FC = () => {
             <TauLogo width={28} />
             <span className="text-sm font-semibold text-text-primary">TAU Community</span>
             <span className="text-text-tertiary text-sm">·</span>
-            <span className="text-xs text-text-tertiary">Official Student Platform</span>
+            <span className="text-xs text-text-tertiary">{t('home.footerTagline')}</span>
           </div>
           <p className="text-xs text-text-tertiary text-center sm:text-right">
-            © {new Date().getFullYear()} TAU University. All rights reserved.
+            © {new Date().getFullYear()} TAU University. {t('home.allRightsReserved')}
           </p>
         </div>
       </footer>
