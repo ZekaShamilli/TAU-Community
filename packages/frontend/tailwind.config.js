@@ -62,6 +62,8 @@ export default {
         'soft': 'var(--shadow-soft)',
         'float': 'var(--shadow-float)',
         'lifted': 'var(--shadow-lifted)',
+        'red-glow': '0 0 0 3px rgba(220,38,38,0.18), 0 4px 20px rgba(220,38,38,0.22)',
+        'red-glow-lg': '0 0 0 3px rgba(220,38,38,0.15), 0 8px 32px rgba(220,38,38,0.28)',
       },
       animation: {
         'gradient': 'gradient 8s linear infinite',
@@ -71,6 +73,13 @@ export default {
         'marquee-reverse': 'marqueeReverse 36s linear infinite',
         'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
         'slide-up': 'slideUp 0.4s ease forwards',
+        'shimmer': 'shimmer 2.2s linear infinite',
+        'float-badge': 'floatBadge 5s ease-in-out infinite',
+        'float-badge-2': 'floatBadge2 6s ease-in-out 1s infinite',
+        'float-badge-3': 'floatBadge3 7s ease-in-out 0.5s infinite',
+        'scan': 'scan 3s linear infinite',
+        'border-spin': 'borderSpin 4s linear infinite',
+        'ping-slow': 'ping 2.5s cubic-bezier(0,0,0.2,1) infinite',
       },
       keyframes: {
         gradient: {
@@ -101,9 +110,34 @@ export default {
           from: { opacity: '0', transform: 'translateY(14px)' },
           to:   { opacity: '1', transform: 'translateY(0)' },
         },
+        shimmer: {
+          '0%':   { backgroundPosition: '-400px 0' },
+          '100%': { backgroundPosition: '400px 0' },
+        },
+        floatBadge: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(-2deg)' },
+          '50%':       { transform: 'translateY(-10px) rotate(1deg)' },
+        },
+        floatBadge2: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(2deg)' },
+          '50%':       { transform: 'translateY(-14px) rotate(-1deg)' },
+        },
+        floatBadge3: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(-1deg)' },
+          '50%':       { transform: 'translateY(-8px) rotate(2deg)' },
+        },
+        scan: {
+          '0%':   { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(200%)' },
+        },
+        borderSpin: {
+          '0%':   { '--border-angle': '0deg' },
+          '100%': { '--border-angle': '360deg' },
+        },
       },
       transitionTimingFunction: {
         'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'snappy': 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       letterSpacing: {
         'tight': '-0.03em',
