@@ -654,7 +654,7 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* ── How It Works ── */}
-        <section className="mt-24">
+        {!isAuthenticated && <section className="mt-24">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -706,7 +706,7 @@ const HomePage: React.FC = () => {
               </motion.div>
             ))}
           </motion.div>
-        </section>
+        </section>}
 
         {/* ── Upcoming Activities ── */}
         <section className="mt-24">
