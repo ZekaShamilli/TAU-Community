@@ -549,7 +549,7 @@ const HomePage: React.FC = () => {
               custom={1}
               className="font-display text-4xl font-extrabold leading-[1.08] tracking-[-0.045em] sm:text-5xl lg:text-6xl xl:text-7xl"
             >
-              <span className="text-text-primary">Discover </span>
+              <span className="text-text-primary">{t('home.discover')} </span>
               <span className="relative inline-block">
                 <AnimatePresence mode="wait">
                   <motion.span
