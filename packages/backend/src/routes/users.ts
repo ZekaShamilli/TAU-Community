@@ -35,7 +35,7 @@ const updateUserSchema = z.object({
 });
 
 const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, 'Current password is required'),
+  currentPassword: z.string().optional(),
   newPassword: z.string().min(8, 'New password must be at least 8 characters'),
 });
 
@@ -394,9 +394,21 @@ router.post('/:id/change-password',
         return;
       }
 
+      // Non-admin users must provide current password when changing their own
+      const isSuperAdminChangingOther = req.userRole === UserRole.SUPER_ADMIN && req.userId !== userId;
+      if (!isSuperAdminChangingOther && !validation.data.currentPassword) {
+        res.status(400).json({
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Current password is required',
+          },
+        });
+        return;
+      }
+
       const result = await UserService.changePassword(
         userId,
-        validation.data.currentPassword,
+        validation.data.currentPassword || '',
         validation.data.newPassword,
         req.userId!,
         req.userRole!

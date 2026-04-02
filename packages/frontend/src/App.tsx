@@ -26,6 +26,7 @@ import NotFoundPage from './components/public/NotFoundPage';
 
 // Student components
 import GPACalculator from './components/student/GPACalculator';
+import ProfileSettings from './components/common/ProfileSettings';
 
 // Admin components
 import SuperAdminDashboard from './components/admin/SuperAdminDashboard';
@@ -53,6 +54,14 @@ function App() {
                   <GPACalculator />
                 </ProtectedRoute>
               } 
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <ProfileSettings />
+                </ProtectedRoute>
+              }
             />
             
             {/* Authentication Routes */}

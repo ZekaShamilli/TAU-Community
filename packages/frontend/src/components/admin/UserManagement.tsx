@@ -21,6 +21,12 @@ const UserManagement: React.FC = () => {
   const [coinAmount, setCoinAmount] = useState('');
   const [coinReason, setCoinReason] = useState('');
   const [showTransactions, setShowTransactions] = useState(false);
+  const [editUserDialogOpen, setEditUserDialogOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<any | null>(null);
+  const [editPhone, setEditPhone] = useState('');
+  const [editNewPassword, setEditNewPassword] = useState('');
+  const [editConfirmPassword, setEditConfirmPassword] = useState('');
+  const [showEditNewPw, setShowEditNewPw] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -77,6 +83,70 @@ const UserManagement: React.FC = () => {
       toast.error(error.message || 'Failed to adjust coins');
     },
   });
+
+  const updateUserMutation = useMutation({
+    mutationFn: async (data: { id: string; phone: string }) => {
+      const response = await apiClient.put(`/users/${data.id}`, { phone: data.phone });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      toast.success('İstifadəçi məlumatları yeniləndi');
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error?.message || 'Xəta baş verdi');
+    },
+  });
+
+  const adminChangePasswordMutation = useMutation({
+    mutationFn: async (data: { id: string; newPassword: string }) => {
+      const response = await apiClient.post(`/users/${data.id}/change-password`, { newPassword: data.newPassword });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success('Şifrə dəyişdirildi');
+      setEditNewPassword('');
+      setEditConfirmPassword('');
+    },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error?.message || 'Şifrə dəyişdirilə bilmədi');
+    },
+  });
+
+  const handleOpenEditUser = (user: any) => {
+    setUserToEdit(user);
+    setEditPhone(user.phone || '');
+    setEditNewPassword('');
+    setEditConfirmPassword('');
+    setEditUserDialogOpen(true);
+  };
+
+  const handleSaveEditUser = async () => {
+    if (!userToEdit) return;
+    let hasError = false;
+    if (editPhone !== (userToEdit.phone || '')) {
+      try {
+        await updateUserMutation.mutateAsync({ id: userToEdit.id, phone: editPhone });
+      } catch { hasError = true; }
+    }
+    if (editNewPassword) {
+      if (editNewPassword !== editConfirmPassword) {
+        toast.error('Şifrələr uyğun gəlmir');
+        return;
+      }
+      if (editNewPassword.length < 8) {
+        toast.error('Şifrə ən azı 8 simvol olmalıdır');
+        return;
+      }
+      try {
+        await adminChangePasswordMutation.mutateAsync({ id: userToEdit.id, newPassword: editNewPassword });
+      } catch { hasError = true; }
+    }
+    if (!hasError) {
+      setEditUserDialogOpen(false);
+      setUserToEdit(null);
+    }
+  };
 
   const handleAdjustCoins = () => {
     if (!userToAdjust) return;
@@ -300,6 +370,9 @@ const UserManagement: React.FC = () => {
                               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setSelectedUser(user); setViewDialogOpen(true); }} className="p-2 rounded-lg hover:bg-[var(--accent-muted)] text-[var(--accent)] transition-colors">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                               </motion.button>
+                              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => handleOpenEditUser(user)} className="p-2 rounded-lg hover:bg-blue-500/20 text-blue-400 transition-colors" title="İstifadəçini redaktə et">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                              </motion.button>
                               <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => { setUserToDelete(user); setDeleteDialogOpen(true); }} className="p-2 rounded-lg hover:bg-red-500/20 text-red-400 transition-colors">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                               </motion.button>
@@ -410,6 +483,63 @@ const UserManagement: React.FC = () => {
               <div className="flex gap-4">
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setAdjustCoinsDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">{t('admin.cancel')}</motion.button>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleAdjustCoins} disabled={adjustCoinsMutation.isPending} className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-semibold hover:shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">{adjustCoinsMutation.isPending ? t('admin.adjusting') : t('admin.adjustCoinsBtn')}</motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {editUserDialogOpen && userToEdit && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setEditUserDialogOpen(false)}>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="glass-card p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <h3 className="text-2xl font-bold neon-text mb-2">İstifadəçini Redaktə Et</h3>
+              <p className="text-text-tertiary text-sm mb-6">{userToEdit.firstName} {userToEdit.lastName} &bull; {userToEdit.email}</p>
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-text-secondary mb-2">Telefon nömrəsi</label>
+                  <input
+                    type="tel"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    placeholder="+994 XX XXX XX XX"
+                    className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                  />
+                </div>
+                <div className="border-t border-[var(--border)] pt-4">
+                  <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3">Yeni şifrə təyin et (isteğe bağlı)</p>
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <input
+                        type={showEditNewPw ? 'text' : 'password'}
+                        value={editNewPassword}
+                        onChange={(e) => setEditNewPassword(e.target.value)}
+                        placeholder="Yeni şifrə (ən azı 8 simvol)"
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors pr-10"
+                      />
+                      <button type="button" onClick={() => setShowEditNewPw(!showEditNewPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                        {showEditNewPw ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>}
+                      </button>
+                    </div>
+                    <input
+                      type="password"
+                      value={editConfirmPassword}
+                      onChange={(e) => setEditConfirmPassword(e.target.value)}
+                      placeholder="Şifrəni təsdiqlə"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                    />
+                    {editNewPassword && editConfirmPassword && editNewPassword !== editConfirmPassword && (
+                      <p className="text-xs text-red-500">Şifrələr uyğun gəlmir</p>
+                    )}
+                    <p className="text-xs text-text-tertiary">Cari şifrə tələb olunmur — admin olaraq dəyişirsiniz.</p>
+                  </div>
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setEditUserDialogOpen(false)} className="flex-1 px-6 py-3 rounded-xl border border-[var(--border-strong)] text-text-primary font-semibold hover:bg-[var(--bg-subtle)] transition-colors">Ləğv et</motion.button>
+                  <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSaveEditUser} disabled={updateUserMutation.isPending || adminChangePasswordMutation.isPending} className="flex-1 neon-button disabled:opacity-50 disabled:cursor-not-allowed">
+                    {(updateUserMutation.isPending || adminChangePasswordMutation.isPending) ? 'Saxlanılır...' : 'Saxla'}
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           </motion.div>

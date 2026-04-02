@@ -451,6 +451,9 @@ const HomePage: React.FC = () => {
                         <button onClick={() => navigate('/gpa-calculator')} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-[var(--bg-subtle)] flex items-center gap-2">
                           <span>🎓</span><span>{t('home.gpaCalculator')}</span>
                         </button>
+                        <button onClick={() => navigate('/settings')} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-text-primary transition hover:bg-[var(--bg-subtle)] flex items-center gap-2">
+                          <span>⚙️</span><span>Tənzimləmələr</span>
+                        </button>
                         <div className="my-1 h-px bg-[var(--border)]" />
                         <button onClick={handleLogout} className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium text-red-500 transition hover:bg-red-50 flex items-center gap-2">
                           <span>👋</span>{t('auth.logout')}
