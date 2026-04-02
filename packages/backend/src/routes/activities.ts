@@ -208,7 +208,7 @@ router.get('/club/:clubId',
   validateParams(clubIdSchema),
   async (req, res) => {
   try {
-    const { clubId } = req.validatedData.params;
+    const clubId = req.params.clubId;
     const { includeCompleted = 'true', limit } = req.query;
 
     const includeCompletedBool = includeCompleted === 'true';
@@ -246,7 +246,7 @@ router.get('/:id',
   validateParams(activityIdSchema),
   async (req, res) => {
   try {
-    const { id } = req.validatedData.params;
+    const id = req.params.id;
     const activity = await activityService.getActivity(id);
 
     if (!activity) {
@@ -317,7 +317,7 @@ router.put('/:id',
   }),
   async (req, res) => {
   try {
-    const { id } = req.validatedData.params;
+    const id = req.params.id;
     const { title, description, startDate, endDate, location, maxParticipants, registrationEndDate, status } = req.validatedData;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
@@ -375,7 +375,7 @@ router.delete('/:id',
   }),
   async (req, res) => {
   try {
-    const { id } = req.validatedData.params;
+    const id = req.params.id;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
@@ -406,7 +406,7 @@ router.get('/:id/history',
   validateParams(activityIdSchema),
   async (req, res) => {
   try {
-    const { id } = req.validatedData.params;
+    const id = req.params.id;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
@@ -460,7 +460,7 @@ router.post('/:id/rollback',
   })),
   async (req, res) => {
   try {
-    const { id } = req.validatedData.params;
+    const id = req.params.id;
     const { targetVersionId } = req.validatedData;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
@@ -497,7 +497,7 @@ router.get('/:id/compare/:version1Id/:version2Id',
   })),
   async (req, res) => {
   try {
-    const { id, version1Id, version2Id } = req.validatedData.params;
+    const { id, version1Id, version2Id } = req.params;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 

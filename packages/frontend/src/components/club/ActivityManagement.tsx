@@ -51,6 +51,10 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
       setSelectedActivity(null);
       resetForm();
     },
+    onError: (error: any) => {
+      const msg = error?.response?.data?.error?.message || error?.message || 'Yeniləmə uğursuz oldu';
+      alert(msg);
+    },
   });
 
   const deleteMutation = useMutation({
