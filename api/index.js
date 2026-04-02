@@ -2282,6 +2282,12 @@ module.exports = async function handler(req, res) {
           paramCount++;
         }
         
+        if (registrationEndDate !== undefined) {
+          updates.push(`registration_end_date = $${paramCount}`);
+          values.push(registrationEndDate);
+          paramCount++;
+        }
+
         updates.push(`updated_at = NOW()`);
         values.push(activityId);
         
