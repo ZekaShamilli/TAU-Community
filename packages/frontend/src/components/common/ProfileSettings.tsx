@@ -145,8 +145,15 @@ const ProfileSettings: React.FC = () => {
 
         {/* Password change */}
         <div className="bg-white border border-gray-200 rounded-2xl p-6">
-          <h2 className="text-base font-semibold text-gray-900 mb-5">Şifrəni Dəyiş</h2>
-          <form onSubmit={handlePasswordChange} className="space-y-4">
+          <h2 className="text-base font-semibold text-gray-900 mb-2">Şifrəni Dəyiş</h2>
+          {user?.hasPassword === false && (
+            <div className="mb-4 flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <p className="text-xs text-blue-700">Google ilə giriş etdiniz. Cari şifrə tələb olunmadan yeni şifrə təyin edə bilərsiniz.</p>
+            </div>
+          )}
+          <form onSubmit={handlePasswordChange} className="space-y-4 mt-3">
+            {user?.hasPassword !== false && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Cari Şifrə</label>
               <div className="relative">
@@ -156,7 +163,7 @@ const ProfileSettings: React.FC = () => {
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Cari şifrənizi daxil edin"
                   className={inputClass}
-                  required
+                  required={user?.hasPassword !== false}
                 />
                 <button
                   type="button"
@@ -171,6 +178,7 @@ const ProfileSettings: React.FC = () => {
                 </button>
               </div>
             </div>
+            )}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Yeni Şifrə</label>
               <div className="relative">

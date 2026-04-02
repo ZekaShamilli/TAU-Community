@@ -11,6 +11,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phone?: string;
+  hasPassword?: boolean;
   role: UserRole;
   isActive: boolean;
   totpEnabled: boolean;

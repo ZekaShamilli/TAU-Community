@@ -2727,6 +2727,19 @@ module.exports = async function handler(req, res) {
           console.log('GPA column not found, skipping');
         }
 
+        // Try to get phone and password_hash (to detect Google users)
+        let phone = null;
+        let hasPassword = true;
+        try {
+          const extraResult = await client.query('SELECT phone, password_hash FROM users WHERE id = $1', [user.id]);
+          if (extraResult.rows.length > 0) {
+            phone = extraResult.rows[0].phone || null;
+            hasPassword = extraResult.rows[0].password_hash !== 'google-oauth';
+          }
+        } catch (e) {
+          // columns may not exist, ignore
+        }
+
         res.status(200).json({
           data: {
             user: {
@@ -2739,6 +2752,8 @@ module.exports = async function handler(req, res) {
               emailVerified: user.email_verified,
               totpEnabled: user.totp_enabled,
               gpa: gpa,
+              phone: phone,
+              hasPassword: hasPassword,
               clubId: user.club_id || null,
               clubName: user.club_name || null
             }
@@ -4683,6 +4698,150 @@ module.exports = async function handler(req, res) {
             message: 'Failed to update GPA',
           },
         });
+        return;
+      }
+    }
+
+    // Update user profile - PUT /api/users/:id
+    const userUpdateMatch = url.match(/^\/api\/users\/([a-f0-9-]+)$/);
+    if (userUpdateMatch && method === 'PUT') {
+      try {
+        const userId = userUpdateMatch[1];
+        const { phone, firstName, lastName } = req.body;
+
+        // Auth check
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          res.status(401).json({ error: { code: 'UNAUTHORIZED', message: 'Authentication required' } });
+          return;
+        }
+        const token = authHeader.substring(7);
+        let decoded;
+        try { decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8')); } catch (e) {
+          res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
+          return;
+        }
+        if (decoded.exp && decoded.exp < Date.now()) {
+          res.status(401).json({ error: { code: 'TOKEN_EXPIRED', message: 'Token expired' } });
+          return;
+        }
+        // Users can only update their own profile unless Super Admin
+        if (decoded.role !== 'SUPER_ADMIN' && decoded.userId !== userId) {
+          res.status(403).json({ error: { code: 'ACCESS_DENIED', message: 'Access denied' } });
+          return;
+        }
+
+        const client = getDatabaseClient();
+        await client.connect();
+
+        // Try to update phone (column may not exist, so catch errors)
+        try {
+          await client.query(
+            'UPDATE users SET phone = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+            [phone || null, userId]
+          );
+        } catch (colError) {
+          // phone column may not exist, try adding it
+          try {
+            await client.query('ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20)');
+            await client.query(
+              'UPDATE users SET phone = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+              [phone || null, userId]
+            );
+          } catch (altError) {
+            console.error('Could not update phone:', altError.message);
+          }
+        }
+
+        await client.end();
+
+        res.status(200).json({ success: true, message: 'Profile updated successfully' });
+        return;
+      } catch (error) {
+        console.error('Update user error:', error);
+        res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Failed to update user' } });
+        return;
+      }
+    }
+
+    // Change password - POST /api/users/:id/change-password
+    const changePwMatch = url.match(/^\/api\/users\/([a-f0-9-]+)\/change-password$/);
+    if (changePwMatch && method === 'POST') {
+      try {
+        const userId = changePwMatch[1];
+        const { currentPassword, newPassword } = req.body;
+
+        if (!newPassword || newPassword.length < 8) {
+          res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'New password must be at least 8 characters' } });
+          return;
+        }
+
+        // Auth check
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          res.status(401).json({ error: { code: 'UNAUTHORIZED', message: 'Authentication required' } });
+          return;
+        }
+        const token = authHeader.substring(7);
+        let decoded;
+        try { decoded = JSON.parse(Buffer.from(token, 'base64').toString('utf-8')); } catch (e) {
+          res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid token' } });
+          return;
+        }
+        if (decoded.exp && decoded.exp < Date.now()) {
+          res.status(401).json({ error: { code: 'TOKEN_EXPIRED', message: 'Token expired' } });
+          return;
+        }
+        const isSuperAdminChangingOther = decoded.role === 'SUPER_ADMIN' && decoded.userId !== userId;
+        if (!isSuperAdminChangingOther && decoded.userId !== userId) {
+          res.status(403).json({ error: { code: 'ACCESS_DENIED', message: 'Access denied' } });
+          return;
+        }
+
+        const bcrypt = require('bcrypt');
+        const client = getDatabaseClient();
+        await client.connect();
+
+        const userResult = await client.query('SELECT password_hash FROM users WHERE id = $1', [userId]);
+        if (userResult.rows.length === 0) {
+          await client.end();
+          res.status(404).json({ error: { code: 'USER_NOT_FOUND', message: 'User not found' } });
+          return;
+        }
+
+        const existingHash = userResult.rows[0].password_hash;
+        const isGoogleUser = existingHash === 'google-oauth';
+
+        // Verify current password (skip for: super admin changing other, or Google users setting password for first time)
+        if (!isSuperAdminChangingOther && !isGoogleUser) {
+          if (!currentPassword) {
+            await client.end();
+            res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'Cari şifrə tələb olunur' } });
+            return;
+          }
+          const isBcrypt = existingHash.startsWith('$2b$') || existingHash.startsWith('$2a$');
+          let valid = false;
+          if (isBcrypt) {
+            valid = await bcrypt.compare(currentPassword, existingHash);
+          } else {
+            valid = (currentPassword === existingHash);
+          }
+          if (!valid) {
+            await client.end();
+            res.status(400).json({ error: { code: 'INVALID_PASSWORD', message: 'Cari şifrə düzgün deyil' } });
+            return;
+          }
+        }
+
+        const newHash = await bcrypt.hash(newPassword, 12);
+        await client.query('UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newHash, userId]);
+        await client.end();
+
+        res.status(200).json({ success: true, message: 'Password changed successfully' });
+        return;
+      } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'Failed to change password' } });
         return;
       }
     }
