@@ -513,7 +513,7 @@ const HomePage: React.FC = () => {
             className="floating-badge absolute -left-8 bottom-20 hidden xl:flex text-text-primary"
           >
             <span className="text-base">🎓</span>
-            <span className="text-xs">TAU University</span>
+            <span className="text-xs">Turkiye Azerbaijan University</span>
           </motion.div>
 
           <motion.div
@@ -539,7 +539,7 @@ const HomePage: React.FC = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                 </span>
-                TAU University
+                Turkiye Azerbaijan University
               </span>
             </motion.div>
 
@@ -871,7 +871,7 @@ const HomePage: React.FC = () => {
             <span className="text-xs text-text-tertiary">{t('home.footerTagline')}</span>
           </div>
           <p className="text-xs text-text-tertiary text-center sm:text-right">
-            © {new Date().getFullYear()} TAU University. {t('home.allRightsReserved')}
+            © {new Date().getFullYear()} Turkiye Azerbaijan University. {t('home.allRightsReserved')}
           </p>
         </div>
       </footer>

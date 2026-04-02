@@ -6,7 +6,7 @@ interface GoogleSignInProps {
   onSuccess?: () => void;
   onError?: (error: string) => void;
   disabled?: boolean;
-}
+}31
 
 declare global {
   interface Window { google: any; }
