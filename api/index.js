@@ -1931,8 +1931,8 @@ module.exports = async function handler(req, res) {
         
         const query = `
           SELECT 
-            a.id, a.title, a.description, a.start_date, 
-            a.end_date, a.location, a.status, a.created_at
+            a.id, a.title, a.description, a.start_date,
+            a.end_date, a.location, a.status, a.max_participants, a.registration_end_date, a.created_at
           FROM activities a
           WHERE a.club_id = $1
           ORDER BY a.start_date DESC
@@ -1949,9 +1949,10 @@ module.exports = async function handler(req, res) {
           endDate: row.end_date,
           location: row.location,
           status: row.status,
+          maxParticipants: row.max_participants,
+          registrationEndDate: row.registration_end_date,
           createdAt: row.created_at
         }));
-
         res.status(200).json({
           data: activities
         });
