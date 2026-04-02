@@ -2701,9 +2701,9 @@ module.exports = async function handler(req, res) {
         `;
         
         const userResult = await client.query(userQuery, [decoded.userId]);
-        await client.end();
 
         if (userResult.rows.length === 0) {
+          await client.end();
           res.status(401).json({
             error: {
               code: 'USER_NOT_FOUND',
@@ -2723,11 +2723,10 @@ module.exports = async function handler(req, res) {
             gpa = gpaResult.rows[0].gpa ? parseFloat(gpaResult.rows[0].gpa) : null;
           }
         } catch (gpaError) {
-          // GPA column doesn't exist yet, ignore
           console.log('GPA column not found, skipping');
         }
 
-        // Try to get phone and password_hash (to detect Google users)
+        // Get phone and password_hash (to detect Google users)
         let phone = null;
         let hasPassword = true;
         try {
@@ -2739,6 +2738,8 @@ module.exports = async function handler(req, res) {
         } catch (e) {
           // columns may not exist, ignore
         }
+
+        await client.end();
 
         res.status(200).json({
           data: {
