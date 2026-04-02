@@ -17,9 +17,10 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    startDate: '',
-    endDate: '',
-    location: ''
+    activityDate: '',
+    activityTime: '',
+    location: '',
+    maxParticipants: ''
   });
 
   const {
@@ -61,10 +62,29 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
     setFormData({
       title: '',
       description: '',
-      startDate: '',
-      endDate: '',
-      location: ''
+      activityDate: '',
+      activityTime: '',
+      location: '',
+      maxParticipants: ''
     });
+  };
+
+  const buildPayload = (data: typeof formData) => {
+    const startDate = data.activityDate && data.activityTime
+      ? new Date(`${data.activityDate}T${data.activityTime}`).toISOString()
+      : undefined;
+    // endDate defaults to startDate + 2 hours
+    const endDate = startDate
+      ? new Date(new Date(startDate).getTime() + 2 * 60 * 60 * 1000).toISOString()
+      : undefined;
+    return {
+      title: data.title,
+      description: data.description,
+      startDate,
+      endDate,
+      location: data.location,
+      ...(data.maxParticipants ? { maxParticipants: parseInt(data.maxParticipants, 10) } : {}),
+    };
   };
 
   const handleCreate = () => {
@@ -74,25 +94,28 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
 
   const handleEdit = (activity: any) => {
     setSelectedActivity(activity);
+    const dt = activity.startDate ? new Date(activity.startDate) : null;
+    const pad = (n: number) => String(n).padStart(2, '0');
     setFormData({
       title: activity.title,
       description: activity.description || '',
-      startDate: activity.startDate?.split('T')[0] || '',
-      endDate: activity.endDate?.split('T')[0] || '',
-      location: activity.location || ''
+      activityDate: dt ? `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}` : '',
+      activityTime: dt ? `${pad(dt.getHours())}:${pad(dt.getMinutes())}` : '',
+      location: activity.location || '',
+      maxParticipants: activity.maxParticipants != null ? String(activity.maxParticipants) : ''
     });
     setIsEditDialogOpen(true);
   };
 
   const handleSubmitCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate(formData);
+    createMutation.mutate(buildPayload(formData));
   };
 
   const handleSubmitEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedActivity) {
-      updateMutation.mutate({ id: selectedActivity.id, data: formData });
+      updateMutation.mutate({ id: selectedActivity.id, data: buildPayload(formData) });
     }
   };
 
@@ -186,8 +209,9 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Title</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Date</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Date & Time</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Location</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Max / Registered</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Status</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Participants</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-text-secondary">Actions</th>
@@ -207,9 +231,16 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                       <p className="text-sm text-text-tertiary">{activity.description?.substring(0, 50)}...</p>
                     </td>
                     <td className="px-6 py-4 text-text-secondary">
-                      {new Date(activity.startDate).toLocaleDateString()}
+                      <p className="font-medium">{new Date(activity.startDate).toLocaleDateString()}</p>
+                      <p className="text-xs text-text-tertiary">{new Date(activity.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                     </td>
-                    <td className="px-6 py-4 text-text-secondary">{activity.location}</td>
+                    <td className="px-6 py-4 text-text-secondary">{activity.location || '—'}</td>
+                    <td className="px-6 py-4 text-text-secondary">
+                      {activity.maxParticipants != null
+                        ? <span className="font-semibold">{activity.maxParticipants}</span>
+                        : <span className="text-text-tertiary">—</span>
+                      }
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                         activity.status === 'PUBLISHED'
@@ -288,7 +319,7 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">Description</label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
@@ -296,33 +327,47 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">Start Date *</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Activity Date *</label>
                     <input
                       type="date"
                       required
-                      value={formData.startDate}
-                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                      value={formData.activityDate}
+                      onChange={(e) => setFormData({ ...formData, activityDate: e.target.value })}
                       className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">End Date</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Activity Time *</label>
                     <input
-                      type="date"
-                      value={formData.endDate}
-                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                      type="time"
+                      required
+                      value={formData.activityTime}
+                      onChange={(e) => setFormData({ ...formData, activityTime: e.target.value })}
                       className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">Location</label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Location</label>
+                    <input
+                      type="text"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Max Participants</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formData.maxParticipants}
+                      onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                      placeholder="e.g. 50"
+                      className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
                 </div>
                 <div className="flex gap-4 pt-4">
                   <button
@@ -378,7 +423,7 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                 <div>
                   <label className="block text-sm font-medium text-text-secondary mb-2">Description</label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
@@ -386,33 +431,47 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">Start Date *</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Activity Date *</label>
                     <input
                       type="date"
                       required
-                      value={formData.startDate}
-                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                      value={formData.activityDate}
+                      onChange={(e) => setFormData({ ...formData, activityDate: e.target.value })}
                       className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">End Date</label>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Activity Time *</label>
                     <input
-                      type="date"
-                      value={formData.endDate}
-                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                      type="time"
+                      required
+                      value={formData.activityTime}
+                      onChange={(e) => setFormData({ ...formData, activityTime: e.target.value })}
                       className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">Location</label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Location</label>
+                    <input
+                      type="text"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">Max Participants</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formData.maxParticipants}
+                      onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value })}
+                      placeholder="e.g. 50"
+                      className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                    />
+                  </div>
                 </div>
                 <div className="flex gap-4 pt-4">
                   <button
