@@ -70,7 +70,7 @@ router.post('/',
   auditLog('CREATE_ACTIVITY', 'ACTIVITY', { captureBeforeState: false }),
   async (req, res) => {
   try {
-    const { clubId, title, description, startDate, endDate, location, maxParticipants, status } = req.validatedData;
+    const { clubId, title, description, startDate, endDate, location, maxParticipants, registrationEndDate, status } = req.validatedData;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
@@ -86,6 +86,7 @@ router.post('/',
       endDate: parsedEndDate,
       location,
       maxParticipants,
+      registrationEndDate: registrationEndDate ? new Date(registrationEndDate) : undefined,
       status: status || ActivityStatus.DRAFT
     };
 
@@ -317,7 +318,7 @@ router.put('/:id',
   async (req, res) => {
   try {
     const { id } = req.validatedData.params;
-    const { title, description, startDate, endDate, location, maxParticipants, status } = req.validatedData;
+    const { title, description, startDate, endDate, location, maxParticipants, registrationEndDate, status } = req.validatedData;
     const userId = req.user!.userId;
     const userRole = req.user!.role;
 
@@ -336,6 +337,10 @@ router.put('/:id',
 
     if (endDate !== undefined) {
       updateData.endDate = new Date(endDate);
+    }
+
+    if (registrationEndDate !== undefined) {
+      updateData.registrationEndDate = new Date(registrationEndDate);
     }
 
     const activity = await activityService.updateActivity(id, updateData, userId, userRole);

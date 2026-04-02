@@ -154,6 +154,7 @@ export const activitySchemas = {
       .regex(VALIDATION_PATTERNS.TURKISH_TEXT, 'Location contains invalid characters')
       .transform(val => val.trim()),
     maxParticipants: z.number().int().positive('Max participants must be a positive number').optional(),
+    registrationEndDate: baseSchemas.futureDate.optional(),
   }).refine(data => new Date(data.endDate) > new Date(data.startDate), {
     message: 'End date must be after start date',
     path: ['endDate'],
@@ -180,6 +181,7 @@ export const activitySchemas = {
       .transform(val => val.trim())
       .optional(),
     maxParticipants: z.number().int().positive('Max participants must be a positive number').optional(),
+    registrationEndDate: baseSchemas.futureDate.optional(),
     status: z.enum(['DRAFT', 'PUBLISHED', 'CANCELLED', 'COMPLETED']).optional(),
   }).refine(data => {
     if (data.startDate && data.endDate) {

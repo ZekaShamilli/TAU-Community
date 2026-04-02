@@ -15,6 +15,7 @@ export interface CreateActivityRequest {
   endDate: Date;
   location?: string;
   maxParticipants?: number;
+  registrationEndDate?: Date;
   status?: ActivityStatus;
 }
 
@@ -25,6 +26,7 @@ export interface UpdateActivityRequest {
   endDate?: Date;
   location?: string;
   maxParticipants?: number;
+  registrationEndDate?: Date;
   status?: ActivityStatus;
 }
 
@@ -172,6 +174,7 @@ export class ActivityService {
         endDate: data.endDate,
         location: data.location,
         maxParticipants: data.maxParticipants,
+        registrationEndDate: data.registrationEndDate,
         createdBy,
         status: data.status || ActivityStatus.DRAFT
       },

@@ -20,7 +20,9 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
     activityDate: '',
     activityTime: '',
     location: '',
-    maxParticipants: ''
+    maxParticipants: '',
+    registrationEndDate: '',
+    registrationEndTime: ''
   });
 
   const {
@@ -65,7 +67,9 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
       activityDate: '',
       activityTime: '',
       location: '',
-      maxParticipants: ''
+      maxParticipants: '',
+      registrationEndDate: '',
+      registrationEndTime: ''
     });
   };
 
@@ -73,10 +77,14 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
     const startDate = data.activityDate && data.activityTime
       ? new Date(`${data.activityDate}T${data.activityTime}`).toISOString()
       : undefined;
-    // endDate defaults to startDate + 2 hours
     const endDate = startDate
       ? new Date(new Date(startDate).getTime() + 2 * 60 * 60 * 1000).toISOString()
       : undefined;
+    const registrationEndDate = data.registrationEndDate && data.registrationEndTime
+      ? new Date(`${data.registrationEndDate}T${data.registrationEndTime}`).toISOString()
+      : data.registrationEndDate
+        ? new Date(`${data.registrationEndDate}T23:59`).toISOString()
+        : undefined;
     return {
       title: data.title,
       description: data.description,
@@ -84,6 +92,7 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
       endDate,
       location: data.location,
       ...(data.maxParticipants ? { maxParticipants: parseInt(data.maxParticipants, 10) } : {}),
+      ...(registrationEndDate ? { registrationEndDate } : {}),
     };
   };
 
@@ -102,7 +111,13 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
       activityDate: dt ? `${dt.getFullYear()}-${pad(dt.getMonth()+1)}-${pad(dt.getDate())}` : '',
       activityTime: dt ? `${pad(dt.getHours())}:${pad(dt.getMinutes())}` : '',
       location: activity.location || '',
-      maxParticipants: activity.maxParticipants != null ? String(activity.maxParticipants) : ''
+      maxParticipants: activity.maxParticipants != null ? String(activity.maxParticipants) : '',
+      registrationEndDate: activity.registrationEndDate
+        ? (() => { const d = new Date(activity.registrationEndDate); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; })()
+        : '',
+      registrationEndTime: activity.registrationEndDate
+        ? (() => { const d = new Date(activity.registrationEndDate); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; })()
+        : ''
     });
     setIsEditDialogOpen(true);
   };
@@ -369,6 +384,29 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                     />
                   </div>
                 </div>
+                <div className="border-t border-white/10 pt-4">
+                  <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3">Registration Deadline (optional)</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Last Registration Date</label>
+                      <input
+                        type="date"
+                        value={formData.registrationEndDate}
+                        onChange={(e) => setFormData({ ...formData, registrationEndDate: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Last Registration Time</label>
+                      <input
+                        type="time"
+                        value={formData.registrationEndTime}
+                        onChange={(e) => setFormData({ ...formData, registrationEndTime: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="flex gap-4 pt-4">
                   <button
                     type="button"
@@ -471,6 +509,29 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                       placeholder="e.g. 50"
                       className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
                     />
+                  </div>
+                </div>
+                <div className="border-t border-white/10 pt-4">
+                  <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3">Registration Deadline (optional)</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Last Registration Date</label>
+                      <input
+                        type="date"
+                        value={formData.registrationEndDate}
+                        onChange={(e) => setFormData({ ...formData, registrationEndDate: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Last Registration Time</label>
+                      <input
+                        type="time"
+                        value={formData.registrationEndTime}
+                        onChange={(e) => setFormData({ ...formData, registrationEndTime: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-800 border border-white/20 rounded-lg text-text-primary focus:outline-none focus:border-neon-blue"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-4 pt-4">
