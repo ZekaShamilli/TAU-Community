@@ -2206,6 +2206,7 @@ module.exports = async function handler(req, res) {
         }
         
         // Verify user is president of the club (if not super admin)
+        console.log(`Ownership check - president_id: ` + activityCheck.rows[0].president_id + `, decoded.userId: ` + decoded.userId + `, role: ` + decoded.role);
         if (decoded.role === 'CLUB_PRESIDENT' && activityCheck.rows[0].president_id !== decoded.userId) {
           await client.end();
           res.status(403).json({
@@ -2321,7 +2322,7 @@ module.exports = async function handler(req, res) {
         });
         return;
       } catch (error) {
-        console.error('Update activity error:', error);
+        console.error('Update activity error:', error.message, error.stack);
         res.status(500).json({ 
           error: 'Failed to update activity',
           message: error.message 
