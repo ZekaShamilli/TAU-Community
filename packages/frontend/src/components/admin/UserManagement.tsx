@@ -333,11 +333,28 @@ const UserManagement: React.FC = () => {
               ) : (
                 <div className="space-y-6">
                   <div><h4 className="text-xl font-bold text-text-primary">{selectedUser.firstName} {selectedUser.lastName}</h4><p className="text-text-tertiary">{selectedUser.email}</p></div>
+
+                  <div className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+                    <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider">Əlaqə məlumatları</p>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-text-tertiary w-28 shrink-0">E-poçt</span>
+                        <span className="text-sm text-text-primary font-medium">{selectedUser.email}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm text-text-tertiary w-28 shrink-0">Telefon</span>
+                        <span className="text-sm text-text-primary font-medium">
+                          {(userDetailsData?.user?.phone || selectedUser.phone) ? (userDetailsData?.user?.phone || selectedUser.phone) : <span className="text-text-tertiary italic">Daxil edilməyib</span>}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-2 gap-6">
-                    <div><p className="text-sm text-text-tertiary mb-2">Role</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getRoleColor(selectedUser.role)}`}>{getRoleLabel(selectedUser.role)}</span></div>
+                    <div><p className="text-sm text-text-tertiary mb-2">Rol</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${getRoleColor(selectedUser.role)}`}>{getRoleLabel(selectedUser.role)}</span></div>
                     <div><p className="text-sm text-text-tertiary mb-2">Status</p><span className={`px-3 py-1 rounded-full text-xs font-semibold border ${selectedUser.isActive ? 'bg-green-50 text-green-700 border-green-200' : 'bg-gray-500/20 text-text-tertiary border-gray-500/50'}`}>{selectedUser.isActive ? t('admin.active') : t('admin.inactive')}</span></div>
                   </div>
-                  <div><p className="text-sm text-text-tertiary mb-2">Joined</p><p className="text-text-primary">{new Date(selectedUser.createdAt).toLocaleDateString()}</p></div>
+                  <div><p className="text-sm text-text-tertiary mb-2">Qeydiyyat tarixi</p><p className="text-text-primary">{new Date(selectedUser.createdAt).toLocaleDateString()}</p></div>
                   <div><h5 className="text-lg font-semibold text-text-primary mb-4 border-t border-[var(--border)] pt-4">{t('admin.clubMemberships')}</h5>
                     {userDetailsData?.clubs && userDetailsData.clubs.length > 0 ? (
                       <div className="space-y-3">{userDetailsData.clubs.map((club: any) => (<div key={club.id} className="bg-[var(--bg-subtle)] border border-[var(--border)] rounded-xl p-4"><p className="font-medium text-text-primary">{club.name}</p><p className="text-sm text-text-tertiary">Role: {club.memberRole || 'Member'} {'\u2022'} Joined: {new Date(club.joinedAt).toLocaleDateString()}</p></div>))}</div>
