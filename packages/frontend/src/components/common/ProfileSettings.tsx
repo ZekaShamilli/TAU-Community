@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import apiClient from '../../lib/api';
 
@@ -10,6 +11,7 @@ const ProfileSettings: React.FC = () => {
   const { t } = useTranslation();
   const { user, refreshUser } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [phone, setPhone] = useState(user?.phone || '');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -74,9 +76,19 @@ const ProfileSettings: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-10 px-4">
       <div className="mx-auto max-w-xl space-y-6">
 
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Hesab Tənzimləmələri</h1>
-          <p className="text-sm text-gray-500 mt-1">Şəxsi məlumatlarınızı idarə edin</p>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-500 hover:text-gray-800 hover:border-gray-300 transition-colors shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Hesab Tənzimləmələri</h1>
+            <p className="text-sm text-gray-500 mt-0.5">Şəxsi məlumatlarınızı idarə edin</p>
+          </div>
         </div>
 
         {/* Profile info */}
