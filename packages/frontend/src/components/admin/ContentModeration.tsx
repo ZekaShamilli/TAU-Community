@@ -36,6 +36,10 @@ const ContentModeration: React.FC = () => {
   const [editDescription, setEditDescription] = useState('');
   const [editDate, setEditDate] = useState('');
   const [editTime, setEditTime] = useState('');
+  const [editLocation, setEditLocation] = useState('');
+  const [editMaxParticipants, setEditMaxParticipants] = useState('');
+  const [editRegDate, setEditRegDate] = useState('');
+  const [editRegTime, setEditRegTime] = useState('');
   const [clubFilter, setClubFilter] = useState('');
 
   const queryClient = useQueryClient();
@@ -122,6 +126,16 @@ const ContentModeration: React.FC = () => {
       setEditTime('');
     }
     
+    setEditLocation((item as any).location || '');
+    setEditMaxParticipants((item as any).maxParticipants != null ? String((item as any).maxParticipants) : '');
+    if ((item as any).registrationEndDate) {
+      const rd = new Date((item as any).registrationEndDate);
+      setEditRegDate(rd.toISOString().split('T')[0]);
+      setEditRegTime(`${rd.getUTCHours().toString().padStart(2,'0')}:${rd.getUTCMinutes().toString().padStart(2,'0')}`);
+    } else {
+      setEditRegDate('');
+      setEditRegTime('');
+    }
     setEditDialogOpen(true);
     setMenuContentId(null);
   };
@@ -168,12 +182,30 @@ const ContentModeration: React.FC = () => {
       }
     }
     
+    let registrationEndDate = undefined;
+    if (editRegDate) {
+      try {
+        const [ry, rm, rd] = editRegDate.split('-').map(Number);
+        if (editRegTime) {
+          const [rh, rmin] = editRegTime.split(':').map(Number);
+          const d = new Date(Date.UTC(ry, rm - 1, rd, rh, rmin, 0, 0));
+          if (!isNaN(d.getTime())) registrationEndDate = d.toISOString();
+        } else {
+          const d = new Date(Date.UTC(ry, rm - 1, rd, 23, 59, 0, 0));
+          if (!isNaN(d.getTime())) registrationEndDate = d.toISOString();
+        }
+      } catch {}
+    }
+
     updateContentMutation.mutate({
       id: selectedContent.id,
       data: {
         title: editTitle,
         description: editDescription,
-        startDate: startDate
+        startDate: startDate,
+        ...(editLocation ? { location: editLocation } : {}),
+        ...(editMaxParticipants ? { maxParticipants: parseInt(editMaxParticipants, 10) } : {}),
+        ...(registrationEndDate ? { registrationEndDate } : {}),
       }
     });
   };
@@ -550,6 +582,58 @@ const ContentModeration: React.FC = () => {
                       onChange={(e) => setEditTime(e.target.value)}
                       className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
                     />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                      Məkan
+                    </label>
+                    <input
+                      type="text"
+                      value={editLocation}
+                      onChange={(e) => setEditLocation(e.target.value)}
+                      placeholder="Məkan daxil edin"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                      Maks. İştirakçı
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={editMaxParticipants}
+                      onChange={(e) => setEditMaxParticipants(e.target.value)}
+                      placeholder="Limitsiz"
+                      className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary placeholder-gray-400 focus:outline-none focus:border-[var(--accent)] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="border-t border-[var(--border)] pt-4">
+                  <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wider mb-3">Qeydiyyat Bitmə Tarixi (isteğe bağlı)</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Tarix</label>
+                      <input
+                        type="date"
+                        value={editRegDate}
+                        onChange={(e) => setEditRegDate(e.target.value)}
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-text-secondary mb-2">Saat</label>
+                      <input
+                        type="time"
+                        value={editRegTime}
+                        onChange={(e) => setEditRegTime(e.target.value)}
+                        className="w-full px-4 py-3 bg-[var(--bg)] border border-[var(--border-strong)] rounded-xl text-text-primary focus:outline-none focus:border-[var(--accent)] transition-colors"
+                      />
+                    </div>
                   </div>
                 </div>
 
