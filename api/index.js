@@ -2275,6 +2275,19 @@ module.exports = async function handler(req, res) {
           paramCount++;
         }
         
+        const { maxParticipants, registrationEndDate } = req.body;
+        if (maxParticipants !== undefined) {
+          updates.push(`max_participants = $${paramCount}`);
+          values.push(maxParticipants);
+          paramCount++;
+        }
+        if (registrationEndDate !== undefined) {
+          updates.push(`registration_end_date = $${paramCount}`);
+
+          values.push(registrationEndDate);
+          paramCount++;
+        }
+        
         updates.push(`updated_at = NOW()`);
         values.push(activityId);
         
