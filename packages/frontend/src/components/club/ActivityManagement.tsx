@@ -253,7 +253,7 @@ const ActivityManagement: React.FC<ActivityManagementProps> = ({ clubId }) => {
                     <td className="px-6 py-4 text-text-secondary">
                       {activity.maxParticipants != null
                         ? <span className="font-semibold">{activity.maxParticipants}</span>
-                        : <span className="text-text-tertiary">—</span>
+                        : <span className="text-text-tertiary text-xs">Limitsiz</span>
                       }
                     </td>
                     <td className="px-6 py-4">
