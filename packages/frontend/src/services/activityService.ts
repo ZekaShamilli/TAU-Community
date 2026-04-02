@@ -23,7 +23,7 @@ export const activityService = {
   },
 
   async getClubActivities(clubId: string): Promise<Activity[]> {
-    const response = await apiClient.get(`/activities/club/${clubId}`);
+    const response = await apiClient.get(`/activities/club/${clubId}?t=${Date.now()}`);
     return response.data.data || response.data;
   },
 
