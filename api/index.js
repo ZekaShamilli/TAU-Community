@@ -95,7 +95,7 @@ async function parseBody(req) {
 module.exports = async function handler(req, res) {
   try {
     const { method } = req;
-    const url = req.url;
+    const url = req.url.split('?')[0];
     
     // Parse body for POST/PUT requests
     if (method === 'POST' || method === 'PUT') {
@@ -2146,6 +2146,7 @@ module.exports = async function handler(req, res) {
       try {
         const activityId = activityUpdateMatch[1];
         const { title, description, startDate, endDate, location, status, date, time } = req.body;
+        console.log('UPDATE ACTIVITY body:', JSON.stringify(req.body), 'url:', url, 'activityId:', activityId);
         
         // Get token from Authorization header
         const authHeader = req.headers.authorization;
