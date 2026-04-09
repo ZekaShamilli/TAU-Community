@@ -157,7 +157,7 @@ const ClubsPage: React.FC = () => {
 
   const appliedClubIds = useMemo(() => {
     if (!myApplications) return new Set<string>();
-    return new Set((myApplications as any[]).map((a: any) => a.clubId ?? a.club?.id).filter(Boolean));
+    return new Set(((myApplications as unknown as any[]) ?? []).map((a: any) => a.clubId ?? a.club?.id).filter(Boolean));
   }, [myApplications]);
 
   const getApplyConfig = useCallback((club: Club) => {

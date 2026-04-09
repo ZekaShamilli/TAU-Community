@@ -821,12 +821,12 @@ const HomePage: React.FC = () => {
                   <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white leading-tight">
                     {t('home.ctaTitle')}
                   </h2>
-                  <p className="text-base text-white/70 leading-relaxed">
+                  <p className="text-base text-white leading-relaxed">
                     {t('home.ctaDesc')}
                   </p>
 
                   {/* Trust pills */}
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-white/70 font-medium">
+                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-white font-medium">
                     {[t('home.trustFree'), t('home.trustNoSpam')].map((label) => (
                       <span key={label} className="flex items-center gap-1.5">
                         <svg className="w-4 h-4 text-white/50" viewBox="0 0 16 16" fill="none">
