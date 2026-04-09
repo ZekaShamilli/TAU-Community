@@ -829,7 +829,7 @@ const HomePage: React.FC = () => {
                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-sm text-white font-medium">
                     {[t('home.trustFree'), t('home.trustNoSpam')].map((label) => (
                       <span key={label} className="flex items-center gap-1.5">
-                        <svg className="w-4 h-4 text-white/50" viewBox="0 0 16 16" fill="none">
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 16 16" fill="none">
                           <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
                           <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
