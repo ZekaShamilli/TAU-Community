@@ -109,6 +109,10 @@
     line-height: 1.65;
   }
 
+  .text-white, .text-white span, .text-white p, .text-white li, .text-white label {
+    color: #ffffff !important;
+  }
+
   :where(input, textarea, select) {
     border: 1px solid var(--border-strong);
     background: var(--bg-elevated);
