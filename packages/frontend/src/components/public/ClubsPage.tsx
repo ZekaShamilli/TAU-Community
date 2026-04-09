@@ -414,10 +414,10 @@ const ClubsPage: React.FC = () => {
                   </span>
                   <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white leading-tight">{t('home.ctaTitle')}</h2>
                   <p className="text-base text-white/70 leading-relaxed">{t('home.ctaDesc')}</p>
-                  <div className="flex flex-wrap gap-3 text-sm text-white/70 font-medium">
+                  <div className="flex flex-wrap gap-3 text-sm text-white font-medium">
                     {[t('home.trustFree'), t('home.trustNoSpam')].map(label => (
                       <span key={label} className="flex items-center gap-1.5">
-                        <svg className="w-4 h-4 text-white/50" viewBox="0 0 16 16" fill="none">
+                        <svg className="w-4 h-4 text-white" viewBox="0 0 16 16" fill="none">
                           <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" />
                           <path d="M5 8l2 2 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
