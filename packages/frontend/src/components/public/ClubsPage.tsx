@@ -413,7 +413,7 @@ const ClubsPage: React.FC = () => {
                     TAU Community
                   </span>
                   <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] text-white leading-tight">{t('home.ctaTitle')}</h2>
-                  <p className="text-base text-white/70 leading-relaxed">{t('home.ctaDesc')}</p>
+                  <p className="text-base text-white leading-relaxed">{t('home.ctaDesc')}</p>
                   <div className="flex flex-wrap gap-3 text-sm text-white font-medium">
                     {[t('home.trustFree'), t('home.trustNoSpam')].map(label => (
                       <span key={label} className="flex items-center gap-1.5">
